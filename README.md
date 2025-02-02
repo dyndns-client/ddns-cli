@@ -1,2 +1,1 @@
-# ddns-cli
-CLI for DynDNS Client
+# CLI for DynDNS Client
