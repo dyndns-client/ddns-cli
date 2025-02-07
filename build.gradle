@@ -9,10 +9,18 @@ repositories {
     mavenCentral()
 }
 
+allprojects {
+    ext {
+        springCoreVersion = '6.2.0'
+        junitBomVersion = '5.10.0'
+    }
+}
+
 dependencies {
     implementation project(':ddns-client')
+    implementation "org.springframework:spring-core:${springCoreVersion}"
 
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
