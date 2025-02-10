@@ -1,1 +1,1 @@
-# CLI for DynDNS Client
+# Command Line Interface for DynDNS Client

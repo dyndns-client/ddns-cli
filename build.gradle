@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group = 'ddns.cli'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+
+    ext {
+        springContextVersion = '6.2.0'
+        junitBomVersion = '5.10.0'
+    }
+}
+
+dependencies {
+    implementation project(':ddns-client')
+    implementation project(':ddns-connector')
+
+    implementation "org.springframework:spring-context:${springContextVersion}"
+
+    testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
