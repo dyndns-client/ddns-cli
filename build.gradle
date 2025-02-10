@@ -22,6 +22,8 @@ allprojects {
 
 dependencies {
     implementation project(':ddns-client')
+    implementation project(':ddns-connector')
+
     implementation "org.springframework:spring-context:${springContextVersion}"
 
     testImplementation platform("org.junit:junit-bom:${junitBomVersion}")

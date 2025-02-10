@@ -1,2 +1,3 @@
 rootProject.name = 'ddns-cli'
 include 'ddns-client'
+include 'ddns-connector'

@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'ddns.client'
+group = 'ddns.connector'
 version = '1.0.0-SNAPSHOT'
 
 repositories {
@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.springframework:spring-context:${springContextVersion}"
+    implementation project(':ddns-client')
 
     testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
