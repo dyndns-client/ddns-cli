@@ -1,11 +1,11 @@
 package ddns.cli;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ddns.cli.command.MainCommand;
+import picocli.CommandLine;
 
 public class App {
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("ddns");
-//        context.getBean("");
+        int exitCode = new CommandLine(new MainCommand()).execute(args);
     }
 }
