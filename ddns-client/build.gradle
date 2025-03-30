@@ -10,12 +10,4 @@ repositories {
 }
 
 dependencies {
-    implementation "com.google.dagger:dagger:${daggerVersion}"
-    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
-
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-    testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
-    testImplementation 'org.junit.jupiter:junit-jupiter'
 }

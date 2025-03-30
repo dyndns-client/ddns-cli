@@ -52,6 +52,8 @@ graalvmNative {
 }
 
 allprojects {
+    apply plugin: 'java'
+
     java {
         sourceCompatibility = JavaVersion.VERSION_17
     }
@@ -60,12 +62,21 @@ allprojects {
         daggerVersion = '2.55'
         picocliVersion = '4.7.6'
         lombokVersion = '1.18.36'
+        gsonVersion = '2.12.1'
         junitBomVersion = '5.10.0'
     }
 
-    compileJava {
-        // generate native-image files for picocli
-        options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+        implementation "com.google.dagger:dagger:${daggerVersion}"
+        annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+
+        implementation("com.google.code.gson:gson:${gsonVersion}")
+
+        testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
+        testImplementation 'org.junit.jupiter:junit-jupiter'
     }
 
     test {
@@ -77,15 +88,6 @@ dependencies {
     implementation project(':ddns-client')
     implementation project(':ddns-connector')
 
-    implementation "com.google.dagger:dagger:${daggerVersion}"
-    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
-
     implementation "info.picocli:picocli:${picocliVersion}"
     annotationProcessor "info.picocli:picocli-codegen:${picocliVersion}"
-
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-    testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
-    testImplementation 'org.junit.jupiter:junit-jupiter'
 }
