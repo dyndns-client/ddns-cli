@@ -9,6 +9,7 @@ plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version "${shadowJarVersion}"
     id 'org.graalvm.buildtools.native' version "${graalvmNativeImageVersion}"
+    id 'checkstyle'
 }
 
 group = 'ddns.cli'
@@ -53,9 +54,15 @@ graalvmNative {
 
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'checkstyle'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
+    }
+
+    checkstyle {
+        toolVersion = "10.12.4"
+        configFile rootProject.file('checkstyle/checkstyle.xml')
     }
 
     ext {
