@@ -86,7 +86,7 @@ allprojects {
 
 dependencies {
     implementation project(':ddns-client')
-    implementation project(':ddns-connector')
+    implementation project(':ddns-web-api')
 
     implementation "info.picocli:picocli:${picocliVersion}"
     annotationProcessor "info.picocli:picocli-codegen:${picocliVersion}"
