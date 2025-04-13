@@ -14,32 +14,17 @@ public class ProfileClientBaseImpl implements ProfileClient {
     private final Gson gson;
 
     @Override
-    public List<Profile> getProfiles() throws ValidationException {
+    public List<Profile> getProfiles(String basePath) throws ValidationException {
         return List.of();
     }
 
     @Override
-    public List<Profile> getProfiles(String path) throws ValidationException {
-        return List.of();
-    }
-
-    @Override
-    public void addProfile(Profile profile) throws ValidationException {
+    public void addProfile(Profile profile, String basePath) throws ValidationException {
 
     }
 
     @Override
-    public void addProfile(Profile profile, String path) throws ValidationException {
-
-    }
-
-    @Override
-    public void removeProfile(String name) {
-
-    }
-
-    @Override
-    public void removeProfile(String name, String path) {
+    public void removeProfile(String name, String basePath) {
 
     }
 }
