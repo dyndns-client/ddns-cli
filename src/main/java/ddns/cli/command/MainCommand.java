@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import java.io.IOException;
 
 import java.util.concurrent.Callable;
 
