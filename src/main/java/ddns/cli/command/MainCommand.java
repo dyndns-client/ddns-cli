@@ -27,7 +27,7 @@ public class MainCommand implements Callable<Integer> {
     public Integer call() {
         System.out.println("Main command executed");
         System.out.println(basePath);
-        daemonClient.start();
+        daemonClient.start(basePath);
         return OK;
     }
 }

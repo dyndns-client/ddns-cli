@@ -1,6 +1,7 @@
 package ddns.client.daemon;
 
 import com.google.gson.Gson;
+import ddns.client.discovery.DnsDiscoveryService;
 import ddns.client.discovery.StunDiscoveryService;
 import ddns.client.domain.DiscoveryMethod;
 import ddns.client.domain.IPVersion;
@@ -16,10 +17,11 @@ import java.util.List;
 public class DaemonClientBaseImpl implements DaemonClient {
 
     private final StunDiscoveryService stunDiscoveryService;
+    private final DnsDiscoveryService dnsDiscoveryService;
     private final Gson gson;
 
     @Override
-    public void start() {
+    public void start(String basePath) {
         Profile profile = Profile.builder()
                 .name("DuckDNS profile 1")
                 .ipVersion(IPVersion.IPV4)
@@ -38,7 +40,7 @@ public class DaemonClientBaseImpl implements DaemonClient {
     }
 
     @Override
-    public void startDetached() {
+    public void startDetached(String basePath) {
         System.out.println("starting ddns client...");
     }
 

@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.Random;
 
 @NoArgsConstructor(onConstructor = @__(@Inject))
@@ -25,9 +26,9 @@ public class StunDiscoveryService {
 
             InetAddress address = InetAddress.getByName(host);
             socket.connect(address, port);
-            byte[] request = buildStunRequest();
+            StunRequest stunRequest = buildStunRequest();
 
-            DatagramPacket packet = new DatagramPacket(request, request.length);
+            DatagramPacket packet = new DatagramPacket(stunRequest.payload, stunRequest.payload.length);
             socket.send(packet);
 
             // Receive STUN response
@@ -35,7 +36,7 @@ public class StunDiscoveryService {
             DatagramPacket responsePacket = new DatagramPacket(response, response.length);
             socket.receive(responsePacket);
 
-            String publicIp = parseStunResponse(responsePacket.getData(), responsePacket.getLength());
+            String publicIp = parseStunResponse(responsePacket.getData(), responsePacket.getLength(), stunRequest.transactionId);
             System.out.println("STUN public IP: " + publicIp);
 
             return new IP(publicIp);
@@ -45,7 +46,7 @@ public class StunDiscoveryService {
         }
     }
 
-    private byte[] buildStunRequest() {
+    private StunRequest buildStunRequest() {
         ByteBuffer buffer = ByteBuffer.allocate(20);
         buffer.order(ByteOrder.BIG_ENDIAN);
 
@@ -54,22 +55,30 @@ public class StunDiscoveryService {
         buffer.putShort((short) 0x0000); // Attributes length
         buffer.putInt(0x2112A442); // Magic Cookie
 
-        // Unique Transaction ID - 12 random byte
+        // Transaction ID - 12 random bytes
         byte[] transactionId = new byte[12];
         random.nextBytes(transactionId);
         buffer.put(transactionId);
+        byte[] payload = buffer.array();
 
-        return buffer.array();
+        return new StunRequest(payload, transactionId);
     }
 
     // Parse XOR-MAPPED-ADDRESS from STUN response
-    private String parseStunResponse(byte[] response, int length) throws UnknownHostException {
+    private String parseStunResponse(byte[] response, int length, byte[] transactionId) throws UnknownHostException, DiscoveryException {
         ByteBuffer buffer = ByteBuffer.wrap(response, 0, length);
         buffer.order(ByteOrder.BIG_ENDIAN);
 
         // Check Magic Cookie
         if (buffer.getInt(4) != 0x2112A442) {
             throw new RuntimeException("Invalid STUN response");
+        }
+
+        byte[] receivedTransactionId = new byte[12];
+        buffer.get(8, receivedTransactionId);
+
+        if (!Arrays.equals(transactionId, receivedTransactionId)) {
+            throw new DiscoveryException("Transaction ID mismatch!");
         }
 
         // Find attributes
@@ -82,7 +91,7 @@ public class StunDiscoveryService {
                 byte family = buffer.get(offset + 5); // 0x01 = IPv4, 0x02 = IPv6
                 byte[] ipBytes;
 
-                // Cast signed Short в Int and do XOR with Magic Cookie
+                // Cast signed Short to Int and do XOR with Magic Cookie
                 int port = (buffer.getShort(offset + 6) & 0xFFFF) ^ 0x2112;
 
                 if (family == 0x01) { // IPv4
@@ -97,6 +106,16 @@ public class StunDiscoveryService {
             }
             offset += 4 + attrLength; // Go to next attribute
         }
-        throw new RuntimeException("XOR-MAPPED-ADDRESS not found!");
+        throw new DiscoveryException("XOR-MAPPED-ADDRESS not found!");
+    }
+
+    public static class StunRequest {
+        byte[] payload;
+        byte[] transactionId;
+
+        StunRequest(byte[] payload, byte[] transactionId) {
+            this.payload = payload;
+            this.transactionId = transactionId;
+        }
     }
 }

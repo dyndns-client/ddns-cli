@@ -2,9 +2,9 @@ package ddns.client.daemon;
 
 public interface DaemonClient {
 
-    void start();
+    void start(String basePath);
 
-    void startDetached();
+    void startDetached(String basePath);
 
     void stop();
 }
