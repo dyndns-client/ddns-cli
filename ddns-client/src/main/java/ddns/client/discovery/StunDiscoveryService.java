@@ -2,6 +2,7 @@ package ddns.client.discovery;
 
 import ddns.client.domain.IP;
 import ddns.client.domain.IPVersion;
+import ddns.client.domain.stun.StunServerInfo;
 import ddns.client.exception.DiscoveryException;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,12 @@ public class StunDiscoveryService {
 
     private final Random random = new Random();
 
-    public IP discover(IPVersion ipVersion, String host, int port) throws DiscoveryException {
+    public IP discover(IPVersion ipVersion, StunServerInfo stunServerInfo, int socketTimeout) throws DiscoveryException {
         try (DatagramSocket socket = new DatagramSocket()) {
-            socket.setSoTimeout(1000);
+            socket.setSoTimeout(socketTimeout);
 
-            InetAddress address = InetAddress.getByName(host);
-            socket.connect(address, port);
+            InetAddress address = InetAddress.getByName(stunServerInfo.getHost());
+            socket.connect(address, stunServerInfo.getPort());
             StunRequest stunRequest = buildStunRequest();
 
             DatagramPacket packet = new DatagramPacket(stunRequest.payload, stunRequest.payload.length);

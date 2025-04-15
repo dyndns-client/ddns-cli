@@ -2,6 +2,7 @@ package ddns.client.discovery;
 
 import ddns.client.domain.IP;
 import ddns.client.domain.IPVersion;
+import ddns.client.domain.dns.DnsServerInfo;
 import ddns.client.exception.DiscoveryException;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
@@ -18,13 +19,13 @@ public class DnsDiscoveryService {
 
     private final Random random = new Random();
 
-    public IP discover(IPVersion ipVersion, String dnsResolverName, String domainName, int port) throws DiscoveryException {
+    public IP discover(IPVersion ipVersion, DnsServerInfo dnsServerInfo, int socketTimeout) throws DiscoveryException {
         try (DatagramSocket socket = new DatagramSocket()) {
-            socket.setSoTimeout(1000);
+            socket.setSoTimeout(socketTimeout);
 
-            InetAddress serverAddress = InetAddress.getByName(dnsResolverName);
-            socket.connect(serverAddress, port);
-            DnsRequest dnsQuery = buildDNSQuery(domainName);
+            InetAddress serverAddress = InetAddress.getByName(dnsServerInfo.getDnsResolverName());
+            socket.connect(serverAddress, dnsServerInfo.getPort());
+            DnsRequest dnsQuery = buildDNSQuery(dnsServerInfo.getDomainName());
 
             DatagramPacket requestPacket = new DatagramPacket(dnsQuery.payload, dnsQuery.payload.length);
             socket.send(requestPacket);

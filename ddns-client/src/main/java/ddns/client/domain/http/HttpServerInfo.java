@@ -15,7 +15,6 @@ import java.util.Map;
 @Builder
 public class HttpServerInfo {
     private String url;
-    private HttpMethod method;
     private RequestInfo requestInfo;
     private ResponseInfo responseInfo;
 
@@ -24,6 +23,7 @@ public class HttpServerInfo {
     @Data
     @Builder
     public static class RequestInfo {
+        private HttpMethod method;
         private Map<String, String> parameters;
     }
 
@@ -32,8 +32,13 @@ public class HttpServerInfo {
     @Data
     @Builder
     public static class ResponseInfo {
-        private String contentType;
+        private ContentType contentType;
         private IPLocation ipLocation;
+    }
+
+    public static class IPLocation {
+        private LocationType locationType;
+        private String name;
     }
 
     public enum HttpMethod {
@@ -50,7 +55,7 @@ public class HttpServerInfo {
         private final String httpValue;
     }
 
-    public enum IPLocation {
+    public enum LocationType {
         BODY,
         HEADER
     }
