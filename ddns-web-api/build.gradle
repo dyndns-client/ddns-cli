@@ -10,14 +10,11 @@ repositories {
 }
 
 ext {
-    httpcomponentsVersion = '5.3.3'
+    httpcomponentsCoreVersion = '5.3.4'
 }
 
 dependencies {
     implementation project(':ddns-client')
 
-    implementation "org.apache.httpcomponents.core5:httpcore5:${httpcomponentsVersion}"
-
-    testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation "org.apache.httpcomponents.core5:httpcore5:${httpcomponentsCoreVersion}"
 }

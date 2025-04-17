@@ -24,6 +24,7 @@ public class HttpServerInfo {
     @Builder
     public static class RequestInfo {
         private HttpMethod method;
+        // GET query params or POST application/x-www-form-urlencoded params
         private Map<String, String> parameters;
     }
 
@@ -32,13 +33,23 @@ public class HttpServerInfo {
     @Data
     @Builder
     public static class ResponseInfo {
-        private ContentType contentType;
+        @Builder.Default
+        private ContentType contentType = ContentType.TEXT_PLAIN;
         private IPLocation ipLocation;
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
     public static class IPLocation {
-        private LocationType locationType;
-        private String name;
+        @Builder.Default
+        private LocationType locationType = LocationType.BODY;
+        /*
+        If locationType is 'HEADER' or locationType is 'BODY' and contentType is 'application/json'
+        Then locationName is header-name or field-name
+        */
+        private String locationName;
     }
 
     public enum HttpMethod {

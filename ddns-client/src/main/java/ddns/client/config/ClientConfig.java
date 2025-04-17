@@ -6,6 +6,7 @@ import dagger.Provides;
 import ddns.client.daemon.DaemonClient;
 import ddns.client.daemon.DaemonClientBaseImpl;
 import ddns.client.discovery.DnsDiscoveryService;
+import ddns.client.discovery.HttpDiscoveryService;
 import ddns.client.discovery.StunDiscoveryService;
 
 @Module
@@ -14,7 +15,8 @@ public class ClientConfig {
     @Provides
     public DaemonClient provideDaemonClient(Gson gson,
                                             StunDiscoveryService stunDiscoveryService,
-                                            DnsDiscoveryService dnsDiscoveryService) {
-        return new DaemonClientBaseImpl(stunDiscoveryService, dnsDiscoveryService, gson);
+                                            DnsDiscoveryService dnsDiscoveryService,
+                                            HttpDiscoveryService httpDiscoveryService) {
+        return new DaemonClientBaseImpl(stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService, gson);
     }
 }

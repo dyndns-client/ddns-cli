@@ -9,5 +9,10 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    httpcomponentsClientVersion = '5.4.2'
+}
+
 dependencies {
+    implementation "org.apache.httpcomponents.client5:httpclient5:${httpcomponentsClientVersion}"
 }
