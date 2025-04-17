@@ -93,13 +93,13 @@ public class HttpDiscoveryService {
             try (CloseableHttpResponse response = client.execute(request)) {
                 if (LocationType.HEADER.equals(locationType)) {
                     Header header = response.getHeader(locationName);
-                    if (Objects.nonNull(header)) {
-                        String value = header.getValue();
-                        value = value.trim();
-                        return new IP(value);
-                    } else {
+
+                    if (Objects.isNull(header)) {
                         throw new DiscoveryException("Header not found: " + locationName);
                     }
+                    String value = header.getValue();
+                    value = value.trim();
+                    return new IP(value);
                 }
 
                 if (LocationType.BODY.equals(locationType)) {
