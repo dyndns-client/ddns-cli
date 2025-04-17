@@ -4,18 +4,11 @@ import com.google.gson.Gson;
 import ddns.client.discovery.DnsDiscoveryService;
 import ddns.client.discovery.HttpDiscoveryService;
 import ddns.client.discovery.StunDiscoveryService;
-import ddns.client.domain.DiscoveryMethod;
 import ddns.client.domain.IP;
-import ddns.client.domain.IPVersion;
-import ddns.client.domain.Profile;
 import ddns.client.domain.http.HttpServerInfo;
-import ddns.client.domain.stun.StunDiscoveryInfo;
-import ddns.client.domain.stun.StunServerInfo;
 import ddns.client.exception.DiscoveryException;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DaemonClientBaseImpl implements DaemonClient {
@@ -27,20 +20,6 @@ public class DaemonClientBaseImpl implements DaemonClient {
 
     @Override
     public void start(String basePath) {
-        Profile profile = Profile.builder()
-                .name("DuckDNS profile 1")
-                .ipVersion(IPVersion.IPV4)
-                .discoveryInterval(30)
-                .discoveryMethod(DiscoveryMethod.STUN)
-                .stunDiscoveryInfo(StunDiscoveryInfo.builder()
-                        .servers(List.of(StunServerInfo.builder().host("ad").port(80).build())).build()
-                )
-                .build();
-        String json = gson.toJson(profile);
-        System.out.println(json);
-        Profile fromJson = gson.fromJson(json, Profile.class);
-        System.out.println(fromJson);
-
         try {
             IP publicIP = httpDiscoveryService.discover(HttpServerInfo.builder()
                             .url("https://eth0.me")
