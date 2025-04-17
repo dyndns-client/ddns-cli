@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 import ddns.client.discovery.DnsDiscoveryService;
 import ddns.client.discovery.HttpDiscoveryService;
 import ddns.client.discovery.StunDiscoveryService;
-import ddns.client.domain.IP;
-import ddns.client.domain.http.HttpServerInfo;
-import ddns.client.exception.DiscoveryException;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
 
@@ -20,29 +17,13 @@ public class DaemonClientBaseImpl implements DaemonClient {
 
     @Override
     public void start(String basePath) {
-        try {
-            IP publicIP = httpDiscoveryService.discover(HttpServerInfo.builder()
-                            .url("https://eth0.me")
-                            .requestInfo(HttpServerInfo.RequestInfo.builder()
-                                    .method(HttpServerInfo.HttpMethod.GET)
-                                    .build())
-                            .responseInfo(HttpServerInfo.ResponseInfo.builder()
-                                    .contentType(HttpServerInfo.ContentType.TEXT_PLAIN)
-                                    .ipLocation(HttpServerInfo.IPLocation.builder()
-                                            .locationType(HttpServerInfo.LocationType.BODY)
-                                            .build())
-                                    .build())
-                    .build(), 1000);
-            System.out.println(publicIP);
-        } catch (DiscoveryException e) {
-            throw new RuntimeException(e);
-        }
-
+        // Interactive mode
         System.out.println("starting ddns client...");
     }
 
     @Override
     public void startDetached(String basePath) {
+        // Detached mode. (New process with redirecting output)
         System.out.println("starting ddns client...");
     }
 
