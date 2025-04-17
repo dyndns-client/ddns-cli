@@ -10,5 +10,6 @@ public class App {
     public static void main(String[] args) {
         DaemonClient daemonClient = DaggerClientComponent.create().buildDaemonClient();
         int exitCode = new CommandLine(new MainCommand(daemonClient)).execute(args);
+        System.exit(exitCode);
     }
 }

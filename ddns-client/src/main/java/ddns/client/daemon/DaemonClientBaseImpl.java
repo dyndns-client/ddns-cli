@@ -42,7 +42,19 @@ public class DaemonClientBaseImpl implements DaemonClient {
         System.out.println(fromJson);
 
         try {
-            IP publicIP = httpDiscoveryService.discover(HttpServerInfo.builder().build(), 5);
+            IP publicIP = httpDiscoveryService.discover(HttpServerInfo.builder()
+                            .url("https://eth0.me")
+                            .requestInfo(HttpServerInfo.RequestInfo.builder()
+                                    .method(HttpServerInfo.HttpMethod.GET)
+                                    .build())
+                            .responseInfo(HttpServerInfo.ResponseInfo.builder()
+                                    .contentType(HttpServerInfo.ContentType.TEXT_PLAIN)
+                                    .ipLocation(HttpServerInfo.IPLocation.builder()
+                                            .locationType(HttpServerInfo.LocationType.BODY)
+                                            .build())
+                                    .build())
+                    .build(), 1000);
+            System.out.println(publicIP);
         } catch (DiscoveryException e) {
             throw new RuntimeException(e);
         }
