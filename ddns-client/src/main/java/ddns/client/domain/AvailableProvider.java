@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AvailableProvider {
-    NOIP(1),
-    DuckDNS(2),
-    FreeDNS(3),
-    DYNU(4);
+    NOIP("noip"),
+    DuckDNS("duckdns"),
+    FreeDNS("freedns"),
+    DYNU("dynu");
 
-    private final int position;
+    private final String name;
 }
