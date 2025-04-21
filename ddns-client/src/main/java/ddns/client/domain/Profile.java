@@ -19,6 +19,11 @@ public class Profile {
     private String name;
 
     /**
+     * Is profile active
+     */
+    private boolean active;
+
+    /**
      * Dynamic DNS provider name
      */
     private String providerName;

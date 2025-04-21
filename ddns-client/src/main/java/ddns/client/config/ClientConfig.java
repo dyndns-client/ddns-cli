@@ -8,6 +8,8 @@ import ddns.client.daemon.DaemonClientBaseImpl;
 import ddns.client.discovery.DnsDiscoveryService;
 import ddns.client.discovery.HttpDiscoveryService;
 import ddns.client.discovery.StunDiscoveryService;
+import ddns.client.profile.ProfileClient;
+import ddns.client.profile.ProfileClientBaseImpl;
 
 @Module
 public class ClientConfig {
@@ -18,5 +20,10 @@ public class ClientConfig {
                                             DnsDiscoveryService dnsDiscoveryService,
                                             HttpDiscoveryService httpDiscoveryService) {
         return new DaemonClientBaseImpl(stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService, gson);
+    }
+
+    @Provides
+    public ProfileClient profileProfileClient(Gson gson) {
+        return new ProfileClientBaseImpl(gson);
     }
 }

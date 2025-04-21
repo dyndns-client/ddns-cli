@@ -4,6 +4,7 @@ import dagger.Component;
 import ddns.client.config.ClientConfig;
 import ddns.client.config.GsonConfig;
 import ddns.client.daemon.DaemonClient;
+import ddns.client.profile.ProfileClient;
 import jakarta.inject.Singleton;
 
 @Component(modules = {GsonConfig.class, ClientConfig.class})
@@ -11,4 +12,6 @@ import jakarta.inject.Singleton;
 public interface ClientComponent {
 
     DaemonClient buildDaemonClient();
+
+    ProfileClient buildProfileClient();
 }
