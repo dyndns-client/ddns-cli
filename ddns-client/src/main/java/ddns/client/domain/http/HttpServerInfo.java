@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -24,8 +25,11 @@ public class HttpServerInfo {
     @Builder
     public static class RequestInfo {
         private HttpMethod method;
+        @Builder.Default
+        private Map<String, String> headers = new HashMap<>();
+        @Builder.Default
         // GET query params or POST application/x-www-form-urlencoded params
-        private Map<String, String> parameters;
+        private Map<String, String> parameters = new HashMap<>();
     }
 
     @AllArgsConstructor
@@ -50,11 +54,6 @@ public class HttpServerInfo {
         Then locationName is header-name or field-name
         */
         private String locationName;
-    }
-
-    public enum HttpMethod {
-        GET,
-        POST
     }
 
     @RequiredArgsConstructor

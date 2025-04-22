@@ -24,9 +24,9 @@ public class Profile {
     private boolean active;
 
     /**
-     * Dynamic DNS provider name
+     * Dynamic DNS Provider info for update IP
      */
-    private String providerName;
+    private AddressUpdateInfo updateInfo;
 
     /**
      * Last updated IP
