@@ -6,7 +6,9 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
 @Command(name = "profile",
-        description = "Configuring profiles")
+        description = "Configuring profiles",
+        mixinStandardHelpOptions = true,
+        subcommands = {ProfileCreateCommand.class})
 @Getter
 public class ProfileCommand {
 

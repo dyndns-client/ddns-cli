@@ -12,7 +12,9 @@ public class App {
         DaemonClient daemonClient = DaggerClientComponent.create().buildDaemonClient();
         ProfileClient profileClient = DaggerClientComponent.create().buildProfileClient();
 
-        int exitCode = new CommandLine(new MainCommand(daemonClient, profileClient)).execute(args);
+        CommandLine cmd = new CommandLine(new MainCommand(daemonClient, profileClient));
+        new CommandLineConfigurer().configure(cmd);
+        int exitCode = cmd.execute(args);
         System.exit(exitCode);
     }
 }

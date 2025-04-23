@@ -27,8 +27,8 @@ public class HttpServerInfo {
         private HttpMethod method;
         @Builder.Default
         private Map<String, String> headers = new HashMap<>();
-        @Builder.Default
         // GET query params or POST application/x-www-form-urlencoded params
+        @Builder.Default
         private Map<String, String> parameters = new HashMap<>();
     }
 
@@ -49,10 +49,10 @@ public class HttpServerInfo {
     public static class IPLocation {
         @Builder.Default
         private LocationType locationType = LocationType.BODY;
-        /*
-        If locationType is 'HEADER' or locationType is 'BODY' and contentType is 'application/json'
-        Then locationName is header-name or field-name
-        */
+        /**
+         * If locationType is 'HEADER' or locationType is 'BODY' and contentType is 'application/json'
+         * Then locationName is header-name or field-name
+         */
         private String locationName;
     }
 

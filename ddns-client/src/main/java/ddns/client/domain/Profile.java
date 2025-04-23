@@ -24,6 +24,12 @@ public class Profile {
     private boolean active;
 
     /**
+     * IP version. IPv4 by default
+     */
+    @Builder.Default
+    private IPVersion ipVersion = IPVersion.IPV4;
+
+    /**
      * Dynamic DNS Provider info for update IP
      */
     private AddressUpdateInfo updateInfo;
@@ -32,17 +38,6 @@ public class Profile {
      * Last updated IP
      */
     private IP lastUpdateIp;
-
-    /**
-     * IP discovery interval in seconds. Must be divisible by 10
-     */
-    private int discoveryInterval;
-
-    /**
-     * IP version. IPv4 by default
-     */
-    @Builder.Default
-    private IPVersion ipVersion = IPVersion.IPV4;
 
     /**
      * Discovery method
