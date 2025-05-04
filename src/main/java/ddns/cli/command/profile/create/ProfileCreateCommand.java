@@ -156,6 +156,7 @@ public class ProfileCreateCommand implements Callable<Integer> {
         builder.active(commonOptions.active);
         Profile profile = builder.build();
 
+
         System.out.println(
                 CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) Profile successfully created:|@ %s\n", gson.toJson(profile)))
         );
