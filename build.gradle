@@ -97,4 +97,6 @@ dependencies {
 
     implementation "info.picocli:picocli:${picocliVersion}"
     annotationProcessor "info.picocli:picocli-codegen:${picocliVersion}"
+
+    implementation("commons-codec:commons-codec:1.18.0")
 }

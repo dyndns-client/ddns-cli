@@ -15,5 +15,6 @@ import lombok.NoArgsConstructor;
 public class DnsServerInfo {
     private String domainName;
     private String dnsResolverName;
+    private DnsRecordType dnsRecordType;
     private int port;
 }

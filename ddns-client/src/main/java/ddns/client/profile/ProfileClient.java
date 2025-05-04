@@ -4,10 +4,13 @@ import ddns.client.domain.Profile;
 import ddns.client.exception.ValidationException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProfileClient {
 
-    List<Profile> getProfiles(String basePath) throws ValidationException;
+    Optional<Profile> getProfile(String name, String basePath);
+
+    List<Profile> getProfiles(String basePath);
 
     void addProfile(Profile profile, String basePath) throws ValidationException;
 

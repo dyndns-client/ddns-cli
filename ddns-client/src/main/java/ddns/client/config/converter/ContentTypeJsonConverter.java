@@ -23,9 +23,15 @@ public class ContentTypeJsonConverter implements JsonSerializer<ContentType>, Js
     public ContentType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String element = json.getAsString();
         try {
-            return ContentType.valueOf(element);
+            ContentType[] values = ContentType.values();
+            for (ContentType value : values) {
+                if (value.getHttpValue().equals(element)) {
+                    return value;
+                }
+            }
         } catch (Exception e) {
             throw new JsonParseException(e);
         }
+        throw new JsonParseException("Unknown content type: " + element);
     }
 }

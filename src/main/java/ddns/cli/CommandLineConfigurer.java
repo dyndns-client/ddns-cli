@@ -39,6 +39,11 @@ public class CommandLineConfigurer {
                 return Ansi.OFF.text("");
             }
         });
+        cmd.setExecutionExceptionHandler((ex, commandLine, fullParseResult) -> {
+            String message = CommandLine.Help.Ansi.AUTO.string("@|bold,red " + ex.getMessage() + "|@");
+            commandLine.getErr().println(message);
+            return commandLine.getCommandSpec().exitCodeOnExecutionException();
+        });
         cmd.usage(System.out);
         cmd.setUsageHelpAutoWidth(true);
     }

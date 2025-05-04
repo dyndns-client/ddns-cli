@@ -22,12 +22,6 @@ public class DaemonClientBaseImpl implements DaemonClient {
     }
 
     @Override
-    public void startDetached(String basePath) {
-        // Detached mode. (New process with redirecting output)
-        System.out.println("starting ddns client...");
-    }
-
-    @Override
     public void stop() {
         System.out.println("stopping ddns client...");
     }

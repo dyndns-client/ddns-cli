@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
 import static ddns.client.constant.Defaults.DEFAULT_DISCOVERY_INTERVAL;
 import static ddns.client.constant.Defaults.DEFAULT_DISCOVERY_SOCKET_TIMEOUT;
 
@@ -17,12 +15,12 @@ import static ddns.client.constant.Defaults.DEFAULT_DISCOVERY_SOCKET_TIMEOUT;
 @SuperBuilder
 public abstract class DiscoveryInfo<T> {
     /**
-     * Discovery servers. If more than one server is passed, then requests will be executed in Round-robin.
+     * Discovery server
      */
-    private List<T> servers;
+    private T server;
 
     /**
-     * IP discovery interval in seconds. Must be divisible by 10
+     * IP discovery interval in seconds
      */
     @Builder.Default
     private int discoveryInterval = DEFAULT_DISCOVERY_INTERVAL;
