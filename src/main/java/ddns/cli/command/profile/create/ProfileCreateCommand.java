@@ -19,7 +19,6 @@ import ddns.client.domain.Profile.ProfileBuilder;
 import ddns.client.domain.dns.DnsDiscoveryInfo;
 import ddns.client.domain.http.HttpDiscoveryInfo;
 import ddns.client.domain.stun.StunDiscoveryInfo;
-import ddns.client.exception.ValidationException;
 import lombok.Data;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
@@ -119,21 +118,27 @@ public class ProfileCreateCommand implements Callable<Integer> {
         switch (discoveryOptions.getDiscoveryMethod()) {
             case STUN: {
                 StunDiscoveryInfo stunDiscoveryInfo = stunHandler.handle();
-                System.out.printf("STUN discovery info successfully created: %s\n", gson.toJson(stunDiscoveryInfo));
+                System.out.println(
+                        CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) STUN discovery info successfully created:|@ %s\n", gson.toJson(stunDiscoveryInfo)))
+                );
                 builder.discoveryMethod(DiscoveryMethod.STUN);
                 builder.stunDiscoveryInfo(stunDiscoveryInfo);
                 break;
             }
             case DNS: {
                 DnsDiscoveryInfo dnsDiscoveryInfo = dnsHandler.handle();
-                System.out.printf("DNS discovery info successfully created: %s\n", gson.toJson(dnsDiscoveryInfo));
+                System.out.println(
+                        CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) DNS discovery info successfully created:|@ %s\n", gson.toJson(dnsDiscoveryInfo)))
+                );
                 builder.discoveryMethod(DiscoveryMethod.DNS);
                 builder.dnsDiscoveryInfo(dnsDiscoveryInfo);
                 break;
             }
             case HTTP: {
                 HttpDiscoveryInfo httpDiscoveryInfo = httpHandler.handle();
-                System.out.printf("HTTP discovery info successfully created: %s\n", gson.toJson(httpDiscoveryInfo));
+                System.out.println(
+                        CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) HTTP discovery info successfully created:|@ %s\n", gson.toJson(httpDiscoveryInfo)))
+                );
                 builder.discoveryMethod(DiscoveryMethod.HTTP);
                 builder.httpDiscoveryInfo(httpDiscoveryInfo);
                 break;
@@ -151,16 +156,14 @@ public class ProfileCreateCommand implements Callable<Integer> {
         builder.active(commonOptions.active);
         Profile profile = builder.build();
 
-        System.out.printf("@|bold,underline,bg(60),fg(46) Profile successfully created:|@ %s\n", gson.toJson(profile));
+        System.out.println(
+                CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) Profile successfully created:|@ %s\n", gson.toJson(profile)))
+        );
 
-        try {
-            profileCommand.getMainCommand().getProfileClient().addProfile(profile, basePath);
-        } catch (ValidationException e) {
-            throw new PicocliException(e.getMessage());
-        }
+        profileCommand.getMainCommand().getProfileClient().addProfile(profile, basePath);
 
         System.out.println(
-                CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Start (restart) ddns daemon to apply the changes.|@")
+                CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Start (restart) ddns daemon for apply created profile.|@")
         );
 
         return OK;

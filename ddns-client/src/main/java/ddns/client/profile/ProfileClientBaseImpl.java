@@ -2,7 +2,6 @@ package ddns.client.profile;
 
 import com.google.gson.Gson;
 import ddns.client.domain.Profile;
-import ddns.client.exception.ValidationException;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +37,7 @@ public class ProfileClientBaseImpl implements ProfileClient {
     }
 
     @Override
-    public void addProfile(Profile profile, String basePath) throws ValidationException {
+    public void addProfile(Profile profile, String basePath) {
 
     }
 
