@@ -1,5 +1,6 @@
-package ddns.cli.command;
+package ddns.cli.command.start;
 
+import ddns.cli.command.MainCommand;
 import lombok.Getter;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;

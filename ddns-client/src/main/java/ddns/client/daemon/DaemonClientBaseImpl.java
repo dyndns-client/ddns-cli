@@ -17,12 +17,11 @@ public class DaemonClientBaseImpl implements DaemonClient {
 
     @Override
     public void start(String basePath) {
-        // Interactive mode
-        System.out.println("starting ddns client...");
+
     }
 
     @Override
     public void stop() {
-        System.out.println("stopping ddns client...");
+
     }
 }

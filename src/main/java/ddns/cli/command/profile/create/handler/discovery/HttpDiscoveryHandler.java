@@ -1,5 +1,6 @@
 package ddns.cli.command.profile.create.handler.discovery;
 
+import ddns.cli.command.profile.create.ProfileCreateCommand.DiscoveryOptions;
 import ddns.client.domain.DiscoveryInfo;
 import ddns.client.domain.http.HttpDiscoveryInfo;
 import ddns.client.domain.http.HttpMethod;
@@ -36,7 +37,7 @@ public class HttpDiscoveryHandler {
             )
     );
 
-    public HttpDiscoveryInfo handle() {
+    public HttpDiscoveryInfo handle(DiscoveryOptions discoveryOptions) {
         try {
             var builder = HttpDiscoveryInfo.builder();
 
@@ -75,7 +76,7 @@ public class HttpDiscoveryHandler {
                                     .build())
                     .build());
 
-            DiscoveryInfo<?> common = commonDiscoveryHandler.handle();
+            DiscoveryInfo<?> common = commonDiscoveryHandler.handle(discoveryOptions);
             return builder
                     .discoveryInterval(common.getDiscoveryInterval())
                     .socketTimeout(common.getSocketTimeout())

@@ -1,5 +1,6 @@
 package ddns.cli.command.profile.create.handler.discovery;
 
+import ddns.cli.command.profile.create.ProfileCreateCommand.DiscoveryOptions;
 import ddns.cli.command.profile.create.validator.TransportPortValidator;
 import ddns.client.domain.DiscoveryInfo;
 import ddns.client.domain.dns.DnsDiscoveryInfo;
@@ -39,7 +40,7 @@ public class DnsDiscoveryHandler {
             )
     );
 
-    public DnsDiscoveryInfo handle() {
+    public DnsDiscoveryInfo handle(DiscoveryOptions discoveryOptions) {
         System.out.println("""
                     Select one of the available DNS public IP lookup system by specifying its serial number:
                     """);
@@ -108,7 +109,7 @@ public class DnsDiscoveryHandler {
                         .build());
             }
 
-            DiscoveryInfo<?> common = commonDiscoveryHandler.handle();
+            DiscoveryInfo<?> common = commonDiscoveryHandler.handle(discoveryOptions);
             return builder
                     .discoveryInterval(common.getDiscoveryInterval())
                     .socketTimeout(common.getSocketTimeout())

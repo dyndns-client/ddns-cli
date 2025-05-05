@@ -1,5 +1,6 @@
 package ddns.cli.command.profile.create.handler.discovery;
 
+import ddns.cli.command.profile.create.ProfileCreateCommand.DiscoveryOptions;
 import ddns.cli.command.profile.create.validator.TransportPortValidator;
 import ddns.client.domain.DiscoveryInfo;
 import ddns.client.domain.stun.StunDiscoveryInfo;
@@ -30,7 +31,7 @@ public class StunDiscoveryHandler {
             )
     );
 
-    public StunDiscoveryInfo handle() {
+    public StunDiscoveryInfo handle(DiscoveryOptions discoveryOptions) {
         System.out.println("""
                     Select one of the available stun servers by specifying its serial number:
                     """);
@@ -74,7 +75,7 @@ public class StunDiscoveryHandler {
                         .build());
             }
 
-            DiscoveryInfo<?> common = commonDiscoveryHandler.handle();
+            DiscoveryInfo<?> common = commonDiscoveryHandler.handle(discoveryOptions);
             return builder
                     .discoveryInterval(common.getDiscoveryInterval())
                     .socketTimeout(common.getSocketTimeout())

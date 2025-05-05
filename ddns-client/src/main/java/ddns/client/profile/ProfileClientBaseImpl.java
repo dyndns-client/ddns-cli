@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import ddns.client.domain.Profile;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +38,26 @@ public class ProfileClientBaseImpl implements ProfileClient {
         return List.of();
     }
 
+    @SneakyThrows
     @Override
     public void addProfile(Profile profile, String basePath) {
+        File dir = new File(basePath);
+        if (!new File(basePath).exists()) {
+            boolean ignore = dir.mkdirs();
+        }
 
+        File file = new File(basePath + File.separator + profile.getName() + ".json");
+        if (!file.exists()) {
+            boolean ignore = file.createNewFile();
+        }
+
+        String json = gson.toJson(profile);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(json);
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

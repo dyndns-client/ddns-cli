@@ -10,7 +10,7 @@ import ddns.cli.command.profile.create.handler.discovery.HttpDiscoveryHandler;
 import ddns.cli.command.profile.create.handler.discovery.StunDiscoveryHandler;
 import ddns.cli.command.profile.create.handler.provider.AvailableProviderHandler;
 import ddns.cli.command.profile.create.handler.provider.CustomProviderHandler;
-import ddns.cli.command.profile.create.validator.ProfileCreateValidator;
+import ddns.client.constant.Defaults;
 import ddns.client.domain.AddressUpdateInfo;
 import ddns.client.domain.DiscoveryMethod;
 import ddns.client.domain.IPVersion;
@@ -52,8 +52,6 @@ public class ProfileCreateCommand implements Callable<Integer> {
     private final CustomProviderHandler customProviderHandler = new CustomProviderHandler();
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    private String basePath;
 
     @ParentCommand
     private ProfileCommand profileCommand;
@@ -107,17 +105,24 @@ public class ProfileCreateCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        ProfileCreateValidator.validate(commonOptions, discoveryOptions, customOptions);
+        String basePath = profileCommand.getMainCommand().getBasePath();
+        if ("~./ddns-cli".equals(basePath)) {
+            basePath = Defaults.DDNS_CLI_BASE_PATH;
+        }
 
         if (Objects.isNull(commonOptions.name)) {
             commonOptions.setName(getProfileName());
+        }
+
+        if (profileCommand.getMainCommand().getProfileClient().getProfile(commonOptions.name, basePath).isPresent()) {
+            throw new PicocliException("Profile " + commonOptions.name + " already exists.");
         }
 
         ProfileBuilder builder = Profile.builder();
 
         switch (discoveryOptions.getDiscoveryMethod()) {
             case STUN: {
-                StunDiscoveryInfo stunDiscoveryInfo = stunHandler.handle();
+                StunDiscoveryInfo stunDiscoveryInfo = stunHandler.handle(discoveryOptions);
                 System.out.println(
                         CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) STUN discovery info successfully created:|@ %s\n", gson.toJson(stunDiscoveryInfo)))
                 );
@@ -126,7 +131,7 @@ public class ProfileCreateCommand implements Callable<Integer> {
                 break;
             }
             case DNS: {
-                DnsDiscoveryInfo dnsDiscoveryInfo = dnsHandler.handle();
+                DnsDiscoveryInfo dnsDiscoveryInfo = dnsHandler.handle(discoveryOptions);
                 System.out.println(
                         CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) DNS discovery info successfully created:|@ %s\n", gson.toJson(dnsDiscoveryInfo)))
                 );
@@ -135,7 +140,7 @@ public class ProfileCreateCommand implements Callable<Integer> {
                 break;
             }
             case HTTP: {
-                HttpDiscoveryInfo httpDiscoveryInfo = httpHandler.handle();
+                HttpDiscoveryInfo httpDiscoveryInfo = httpHandler.handle(discoveryOptions);
                 System.out.println(
                         CommandLine.Help.Ansi.AUTO.text(String.format("@|underline,bg(60),fg(46) HTTP discovery info successfully created:|@ %s\n", gson.toJson(httpDiscoveryInfo)))
                 );
@@ -154,6 +159,8 @@ public class ProfileCreateCommand implements Callable<Integer> {
 
         builder.updateInfo(addressUpdateInfo);
         builder.active(commonOptions.active);
+        builder.name(commonOptions.name);
+        builder.ipVersion(commonOptions.ipVersion);
         Profile profile = builder.build();
 
 
@@ -164,7 +171,7 @@ public class ProfileCreateCommand implements Callable<Integer> {
         profileCommand.getMainCommand().getProfileClient().addProfile(profile, basePath);
 
         System.out.println(
-                CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Start (restart) ddns daemon for apply created profile.|@")
+                CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Start (restart) ddns client for apply created profile.|@")
         );
 
         return OK;
@@ -178,9 +185,5 @@ public class ProfileCreateCommand implements Callable<Integer> {
             throw new PicocliException("Invalid profile name, try again.");
         }
         return name;
-    }
-
-    private void init() {
-        basePath = profileCommand.getMainCommand().getBasePath();
     }
 }
