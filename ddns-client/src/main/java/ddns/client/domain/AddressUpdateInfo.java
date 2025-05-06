@@ -1,6 +1,7 @@
 package ddns.client.domain;
 
 import ddns.client.domain.http.HttpMethod;
+import ddns.client.domain.http.IPLocation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +19,14 @@ import static ddns.client.constant.Defaults.DEFAULT_CUSTOM_PROVIDER_SOCKET_TIMEO
 public class AddressUpdateInfo {
     private String url;
     private HttpMethod method;
+    private IPLocation ipLocation;
+
     @Builder.Default
     private int socketTimeout = DEFAULT_CUSTOM_PROVIDER_SOCKET_TIMEOUT;
+
     @Builder.Default
     private Map<String, String> headers = new HashMap<>();
+
     // GET query params or POST application/x-www-form-urlencoded params
     @Builder.Default
     private Map<String, String> parameters = new HashMap<>();

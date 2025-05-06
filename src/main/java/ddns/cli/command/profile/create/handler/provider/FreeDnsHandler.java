@@ -3,6 +3,8 @@ package ddns.cli.command.profile.create.handler.provider;
 import ddns.client.domain.AddressUpdateInfo;
 import ddns.client.domain.AddressUpdateInfo.AddressUpdateInfoBuilder;
 import ddns.client.domain.http.HttpMethod;
+import ddns.client.domain.http.IPLocation;
+import ddns.client.domain.http.LocationType;
 import org.apache.commons.codec.digest.DigestUtils;
 import picocli.CommandLine.PicocliException;
 
@@ -39,6 +41,10 @@ public class FreeDnsHandler {
         builder.method(HttpMethod.GET);
         builder.socketTimeout(10_000);
         builder.parameters(Map.of("host", host));
+        builder.ipLocation(IPLocation.builder()
+                .locationName("address")
+                .locationType(LocationType.BODY)
+                .build());
         return builder.build();
     }
 }

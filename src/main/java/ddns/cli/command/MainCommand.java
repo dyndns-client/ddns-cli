@@ -1,7 +1,7 @@
 package ddns.cli.command;
 
+import ddns.cli.command.client.ClientCommand;
 import ddns.cli.command.profile.ProfileCommand;
-import ddns.cli.command.start.ClientStartCommand;
 import ddns.client.daemon.DaemonClient;
 import ddns.client.profile.ProfileClient;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import picocli.CommandLine.Option;
 @Command(name = "ddns-cli",
         version = "v1.0.0",
         mixinStandardHelpOptions = true,
-        subcommands = {ClientStartCommand.class, ProfileCommand.class})
+        subcommands = {ClientCommand.class, ProfileCommand.class})
 @RequiredArgsConstructor
 @Getter
 public class MainCommand {

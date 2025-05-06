@@ -2,6 +2,8 @@ package ddns.cli.command.profile.create.handler.provider;
 
 import ddns.client.domain.AddressUpdateInfo;
 import ddns.client.domain.http.HttpMethod;
+import ddns.client.domain.http.IPLocation;
+import ddns.client.domain.http.LocationType;
 import org.apache.commons.codec.binary.Base64;
 import picocli.CommandLine.PicocliException;
 
@@ -41,6 +43,10 @@ public class NoipHandler {
                 .socketTimeout(10_000)
                 .parameters(Map.of("hostname", hostname))
                 .headers(headers)
+                .ipLocation(IPLocation.builder()
+                        .locationType(LocationType.BODY)
+                        .locationName("myip")
+                        .build())
                 .build();
     }
 }

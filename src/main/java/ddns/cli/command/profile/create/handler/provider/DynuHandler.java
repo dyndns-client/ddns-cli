@@ -2,6 +2,8 @@ package ddns.cli.command.profile.create.handler.provider;
 
 import ddns.client.domain.AddressUpdateInfo;
 import ddns.client.domain.http.HttpMethod;
+import ddns.client.domain.http.IPLocation;
+import ddns.client.domain.http.LocationType;
 import picocli.CommandLine.PicocliException;
 
 import java.util.Map;
@@ -35,6 +37,10 @@ public class DynuHandler {
                 .socketTimeout(10_000)
                 .method(HttpMethod.GET)
                 .parameters(Map.of("hostname", hostname))
+                .ipLocation(IPLocation.builder()
+                        .locationName("myip")
+                        .locationType(LocationType.BODY)
+                        .build())
                 .build();
     }
 }

@@ -6,7 +6,7 @@ import ddns.client.domain.IP;
 import ddns.client.domain.http.HttpMethod;
 import ddns.client.domain.http.HttpServerInfo;
 import ddns.client.domain.http.HttpServerInfo.ContentType;
-import ddns.client.domain.http.HttpServerInfo.LocationType;
+import ddns.client.domain.http.LocationType;
 import ddns.client.exception.DiscoveryException;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;

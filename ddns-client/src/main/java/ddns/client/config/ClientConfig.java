@@ -15,11 +15,12 @@ import ddns.client.profile.ProfileClientBaseImpl;
 public class ClientConfig {
 
     @Provides
-    public DaemonClient provideDaemonClient(Gson gson,
+    public DaemonClient provideDaemonClient(ProfileClient profileClient,
+                                            Gson gson,
                                             StunDiscoveryService stunDiscoveryService,
                                             DnsDiscoveryService dnsDiscoveryService,
                                             HttpDiscoveryService httpDiscoveryService) {
-        return new DaemonClientBaseImpl(stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService, gson);
+        return new DaemonClientBaseImpl(profileClient, stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService, gson);
     }
 
     @Provides

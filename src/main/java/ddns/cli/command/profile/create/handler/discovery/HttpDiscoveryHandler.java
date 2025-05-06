@@ -6,10 +6,11 @@ import ddns.client.domain.http.HttpDiscoveryInfo;
 import ddns.client.domain.http.HttpMethod;
 import ddns.client.domain.http.HttpServerInfo;
 import ddns.client.domain.http.HttpServerInfo.ContentType;
-import ddns.client.domain.http.HttpServerInfo.IPLocation;
-import ddns.client.domain.http.HttpServerInfo.LocationType;
 import ddns.client.domain.http.HttpServerInfo.RequestInfo;
 import ddns.client.domain.http.HttpServerInfo.ResponseInfo;
+import ddns.client.domain.http.IPLocation;
+import ddns.client.domain.http.LocationType;
+import picocli.CommandLine;
 import picocli.CommandLine.PicocliException;
 
 import java.util.HashMap;
@@ -105,7 +106,9 @@ public class HttpDiscoveryHandler {
             System.out.println("Enter header value:");
             String value = scanner.nextLine();
             if (value.isEmpty()) {
-                System.out.println("Invalid header value, try again.");
+                System.out.println(
+                        CommandLine.Help.Ansi.AUTO.text("@|bold Invalid header value, try again.|@")
+                );
                 continue;
             }
 
@@ -128,7 +131,9 @@ public class HttpDiscoveryHandler {
             System.out.println("Enter parameter value:");
             String value = scanner.nextLine();
             if (value.isEmpty()) {
-                System.out.println("Invalid parameter value, try again.");
+                System.out.println(
+                        CommandLine.Help.Ansi.AUTO.text("@|bold Invalid parameter value, try again.|@")
+                );
                 continue;
             }
 

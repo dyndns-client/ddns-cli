@@ -1,6 +1,6 @@
-package ddns.cli.command.start;
+package ddns.cli.command.client.start;
 
-import ddns.cli.command.MainCommand;
+import ddns.cli.command.client.ClientCommand;
 import lombok.Getter;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
@@ -15,12 +15,12 @@ import static picocli.CommandLine.ExitCode.OK;
 public class ClientStartCommand implements Callable<Integer> {
 
     @ParentCommand
-    private MainCommand mainCommand;
+    private ClientCommand clientCommand;
 
     @Override
     public Integer call() throws Exception {
         System.out.println("Start command executed");
-        mainCommand.getDaemonClient().start(mainCommand.getBasePath());
+        clientCommand.getMainCommand().getDaemonClient().start(clientCommand.getMainCommand().getBasePath());
         return OK;
     }
 }

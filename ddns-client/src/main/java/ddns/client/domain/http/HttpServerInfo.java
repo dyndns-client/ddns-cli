@@ -42,20 +42,6 @@ public class HttpServerInfo {
         private IPLocation ipLocation;
     }
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Data
-    @Builder
-    public static class IPLocation {
-        @Builder.Default
-        private LocationType locationType = LocationType.BODY;
-        /**
-         * If locationType is 'HEADER' or locationType is 'BODY' and contentType is 'application/json'
-         * Then locationName is header-name or field-name
-         */
-        private String locationName;
-    }
-
     @RequiredArgsConstructor
     @Getter
     public enum ContentType {
@@ -63,10 +49,5 @@ public class HttpServerInfo {
         APPLICATION_JSON("application/json");
 
         private final String httpValue;
-    }
-
-    public enum LocationType {
-        BODY,
-        HEADER
     }
 }

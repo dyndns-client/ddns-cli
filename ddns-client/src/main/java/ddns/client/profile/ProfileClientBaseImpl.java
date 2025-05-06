@@ -20,6 +20,7 @@ public class ProfileClientBaseImpl implements ProfileClient {
 
     @Override
     public Optional<Profile> getProfile(String name, String basePath) {
+        basePath += "/profiles";
         File file = new File(basePath + File.separator + name + ".json");
         if (!file.exists()) {
             return Optional.empty();
@@ -41,8 +42,9 @@ public class ProfileClientBaseImpl implements ProfileClient {
     @SneakyThrows
     @Override
     public void addProfile(Profile profile, String basePath) {
+        basePath += "/profiles";
         File dir = new File(basePath);
-        if (!new File(basePath).exists()) {
+        if (!dir.exists()) {
             boolean ignore = dir.mkdirs();
         }
 
