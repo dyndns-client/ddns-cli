@@ -16,11 +16,10 @@ public class ClientConfig {
 
     @Provides
     public DaemonClient provideDaemonClient(ProfileClient profileClient,
-                                            Gson gson,
                                             StunDiscoveryService stunDiscoveryService,
                                             DnsDiscoveryService dnsDiscoveryService,
                                             HttpDiscoveryService httpDiscoveryService) {
-        return new DaemonClientBaseImpl(profileClient, stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService, gson);
+        return new DaemonClientBaseImpl(profileClient, stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService);
     }
 
     @Provides

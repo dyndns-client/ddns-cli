@@ -82,6 +82,9 @@ allprojects {
 
         implementation("com.google.code.gson:gson:${gsonVersion}")
 
+        implementation "org.slf4j:slf4j-api:1.7.36"
+        implementation "org.slf4j:slf4j-simple:1.7.36"
+
         testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
         testImplementation 'org.junit.jupiter:junit-jupiter'
     }

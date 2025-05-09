@@ -9,7 +9,6 @@ public class CommandLineConfigurer {
 
     public void configure(CommandLine cmd) {
         cmd.setHelpFactory((commandSpec, colorScheme) -> new CommandLine.Help(commandSpec, colorScheme) {
-            // my solution for https://stackoverflow.com/questions/79586537/option-description-on-new-line-for-long-option-width
             @Override
             public int calcLongOptionColumnWidth(List<CommandLine.Model.OptionSpec> options,
                                                  List<CommandLine.Model.PositionalParamSpec> positionals,
@@ -44,7 +43,6 @@ public class CommandLineConfigurer {
             commandLine.getErr().println(message);
             return commandLine.getCommandSpec().exitCodeOnExecutionException();
         });
-        cmd.usage(System.out);
         cmd.setUsageHelpAutoWidth(true);
     }
 }

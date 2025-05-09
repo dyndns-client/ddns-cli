@@ -102,7 +102,7 @@ public class StunDiscoveryService {
                             (byte) (buffer.get(offset + 10) ^ 0xA4),
                             (byte) (buffer.get(offset + 11) ^ 0x42)
                     };
-                    return InetAddress.getByAddress(ipBytes).getHostAddress() + ":" + port;
+                    return InetAddress.getByAddress(ipBytes).getHostAddress();
                 }
             }
             offset += 4 + attrLength; // Go to next attribute

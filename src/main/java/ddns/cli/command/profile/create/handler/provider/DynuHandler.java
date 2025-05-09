@@ -36,7 +36,7 @@ public class DynuHandler {
                 .url("https://api.dynu.com/nic/update")
                 .socketTimeout(10_000)
                 .method(HttpMethod.GET)
-                .parameters(Map.of("hostname", hostname))
+                .parameters(Map.of("hostname", hostname, "username", username, "password", password))
                 .ipLocation(IPLocation.builder()
                         .locationName("myip")
                         .locationType(LocationType.BODY)

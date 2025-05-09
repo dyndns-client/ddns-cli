@@ -13,5 +13,7 @@ public interface ProfileClient {
 
     void addProfile(Profile profile, String basePath);
 
+    void updateProfile(Profile profile, String basePath);
+
     void removeProfile(String name, String basePath);
 }

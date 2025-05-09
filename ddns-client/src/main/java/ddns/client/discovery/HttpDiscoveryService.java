@@ -48,6 +48,7 @@ public class HttpDiscoveryService {
         // -- Request info --
         HttpMethod method = httpServerInfo.getRequestInfo().getMethod();
         Map<String, String> parameters = httpServerInfo.getRequestInfo().getParameters();
+        Map<String, String> headers = httpServerInfo.getRequestInfo().getHeaders();
 
         // -- Response info --
         ContentType contentType = httpServerInfo.getResponseInfo().getContentType();
@@ -88,6 +89,12 @@ public class HttpDiscoveryService {
 
             if (Objects.isNull(request)) {
                 throw new DiscoveryException("Http method " + method + " not supported");
+            }
+
+            if (Objects.nonNull(headers) && !headers.isEmpty()) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    request.addHeader(entry.getKey(), entry.getValue());
+                }
             }
 
             try (CloseableHttpResponse response = client.execute(request)) {

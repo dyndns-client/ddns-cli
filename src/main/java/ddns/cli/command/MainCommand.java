@@ -6,9 +6,10 @@ import ddns.client.daemon.DaemonClient;
 import ddns.client.profile.ProfileClient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+
+import static ddns.client.constant.Defaults.DDNS_CLI_BASE_PATH;
 
 @Command(name = "ddns-cli",
         version = "v1.0.0",
@@ -22,9 +23,6 @@ public class MainCommand {
     private final ProfileClient profileClient;
 
     @Option(names = {"--base-dir"},
-            description = "Path to ddns-cli base directory",
-            defaultValue = "~./ddns-cli",
-            showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
-    private String basePath;
-
+            description = "Path to ddns-cli base directory, by default: ~/.ddns-cli")
+    private String basePath = DDNS_CLI_BASE_PATH;
 }

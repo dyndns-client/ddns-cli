@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -36,7 +38,29 @@ public class ProfileClientBaseImpl implements ProfileClient {
 
     @Override
     public List<Profile> getProfiles(String basePath) {
-        return List.of();
+        basePath += "/profiles";
+        File dir = new File(basePath);
+        if (!dir.exists()) {
+            boolean ignore = dir.mkdirs();
+        }
+
+        File[] files = dir.listFiles();
+        if (Objects.nonNull(files)) {
+            List<Profile> profiles = new ArrayList<>();
+            for (File file : files) {
+                if (file.getName().endsWith(".json")) {
+                    try (FileReader reader = new FileReader(file)) {
+                        Profile profile = gson.fromJson(reader, Profile.class);
+                        profiles.add(profile);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            return profiles;
+        } else {
+            return List.of();
+        }
     }
 
     @SneakyThrows
@@ -54,12 +78,17 @@ public class ProfileClientBaseImpl implements ProfileClient {
         }
 
         String json = gson.toJson(profile);
-        try (FileWriter writer = new FileWriter(file)) {
+        try (FileWriter writer = new FileWriter(file, false)) {
             writer.write(json);
             writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void updateProfile(Profile profile, String basePath) {
+        addProfile(profile, basePath);
     }
 
     @Override
