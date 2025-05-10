@@ -3,6 +3,7 @@ package ddns.cli.command.config.email.configure;
 import ddns.cli.command.config.email.EmailCommand;
 import ddns.cli.command.config.email.handler.EmailHandler;
 import ddns.client.email.EmailInfo;
+import ddns.client.email.EmailService;
 import ddns.client.email.EmailServiceBaseImpl;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
@@ -17,7 +18,7 @@ import static picocli.CommandLine.ExitCode.OK;
 public class EmailConfigureCommand implements Callable<Integer> {
 
     private final EmailHandler emailHandler = new EmailHandler();
-    private final EmailServiceBaseImpl emailService = new EmailServiceBaseImpl();
+    private final EmailService emailService = new EmailServiceBaseImpl();
 
     @ParentCommand
     private EmailCommand parent;
