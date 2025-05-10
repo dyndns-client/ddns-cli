@@ -10,7 +10,6 @@ import ddns.cli.command.profile.create.handler.discovery.HttpDiscoveryHandler;
 import ddns.cli.command.profile.create.handler.discovery.StunDiscoveryHandler;
 import ddns.cli.command.profile.create.handler.provider.AvailableProviderHandler;
 import ddns.cli.command.profile.create.handler.provider.CustomProviderHandler;
-import ddns.client.constant.Defaults;
 import ddns.client.domain.AddressUpdateInfo;
 import ddns.client.domain.DiscoveryMethod;
 import ddns.client.domain.IPVersion;
@@ -106,10 +105,6 @@ public class ProfileCreateCommand implements Callable<Integer> {
     @Override
     public Integer call() {
         String basePath = profileCommand.getMainCommand().getBasePath();
-        if ("~./ddns-cli".equals(basePath)) {
-            basePath = Defaults.DDNS_CLI_BASE_PATH;
-        }
-
         if (Objects.isNull(commonOptions.name)) {
             commonOptions.setName(getProfileName());
         }

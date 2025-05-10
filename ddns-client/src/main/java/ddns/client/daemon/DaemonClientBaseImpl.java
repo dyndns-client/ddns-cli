@@ -70,6 +70,7 @@ public class DaemonClientBaseImpl implements DaemonClient {
                 }
             }, 0, delay, TimeUnit.SECONDS);
         }
+        System.out.println("Dynamic DNS Client started!");
         boolean ignore = executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
     }
 

@@ -1,8 +1,8 @@
-package ddns.client.config.component;
+package ddns.client.config.di.component;
 
 import dagger.Component;
-import ddns.client.config.ClientConfig;
-import ddns.client.config.GsonConfig;
+import ddns.client.config.di.ClientConfig;
+import ddns.client.config.di.GsonConfig;
 import ddns.client.daemon.DaemonClient;
 import ddns.client.profile.ProfileClient;
 import jakarta.inject.Singleton;

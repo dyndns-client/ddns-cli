@@ -1,0 +1,34 @@
+package ddns.cli.command.config.email.info;
+
+import ddns.cli.command.config.email.EmailCommand;
+import ddns.client.email.EmailInfo;
+import ddns.client.email.EmailServiceBaseImpl;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.ParentCommand;
+
+import java.util.Optional;
+import java.util.concurrent.Callable;
+
+import static picocli.CommandLine.ExitCode.OK;
+
+@Command(name = "show",
+        description = "Show email info for receive IP update mails",
+        mixinStandardHelpOptions = true)
+public class EmailInfoCommand implements Callable<Integer> {
+
+    private final EmailServiceBaseImpl emailService = new EmailServiceBaseImpl();
+
+    @ParentCommand
+    private EmailCommand parent;
+
+    @Override
+    public Integer call() {
+        Optional<EmailInfo> emailInfo = emailService.getEmailInfo(parent.getParent().getMainCommand().getBasePath());
+        if (emailInfo.isPresent()) {
+            System.out.println(emailInfo.get());
+        } else {
+            System.out.println("No saved email info.");
+        }
+        return OK;
+    }
+}

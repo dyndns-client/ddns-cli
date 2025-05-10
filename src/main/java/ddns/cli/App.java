@@ -1,7 +1,7 @@
 package ddns.cli;
 
 import ddns.cli.command.MainCommand;
-import ddns.client.config.component.DaggerClientComponent;
+import ddns.client.config.di.component.DaggerClientComponent;
 import ddns.client.daemon.DaemonClient;
 import ddns.client.profile.ProfileClient;
 import picocli.CommandLine;

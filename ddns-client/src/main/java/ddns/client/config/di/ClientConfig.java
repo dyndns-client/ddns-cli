@@ -1,4 +1,4 @@
-package ddns.client.config;
+package ddns.client.config.di;
 
 import com.google.gson.Gson;
 import dagger.Module;

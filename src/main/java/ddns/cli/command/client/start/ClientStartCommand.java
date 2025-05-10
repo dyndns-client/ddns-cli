@@ -10,7 +10,8 @@ import java.util.concurrent.Callable;
 import static picocli.CommandLine.ExitCode.OK;
 
 @Command(name = "start",
-        description = "Start Dynamic DNS Client")
+        description = "Start Dynamic DNS Client",
+        mixinStandardHelpOptions = true)
 @Getter
 public class ClientStartCommand implements Callable<Integer> {
 
@@ -18,8 +19,7 @@ public class ClientStartCommand implements Callable<Integer> {
     private ClientCommand clientCommand;
 
     @Override
-    public Integer call() throws Exception {
-        System.out.println("Start command executed");
+    public Integer call() {
         clientCommand.getMainCommand().getDaemonClient().start(clientCommand.getMainCommand().getBasePath());
         return OK;
     }
