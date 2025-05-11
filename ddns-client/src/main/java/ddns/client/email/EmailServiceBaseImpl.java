@@ -51,7 +51,7 @@ public class EmailServiceBaseImpl implements EmailService {
                     InternetAddress.parse(to)
             );
             message.setSubject(emailInfo.getSubject());
-            message.setText("IP updated to" + currentIp);
+            message.setText("IP updated to " + currentIp.getValue());
 
             Transport.send(message);
 
