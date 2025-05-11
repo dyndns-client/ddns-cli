@@ -1,4 +1,4 @@
-package ddns.client.email;
+package ddns.client.domain.email;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

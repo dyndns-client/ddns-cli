@@ -2,7 +2,7 @@ package ddns.cli.command.config.email.configure;
 
 import ddns.cli.command.config.email.EmailCommand;
 import ddns.cli.command.config.email.handler.EmailHandler;
-import ddns.client.email.EmailInfo;
+import ddns.client.domain.email.EmailInfo;
 import ddns.client.email.EmailService;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;

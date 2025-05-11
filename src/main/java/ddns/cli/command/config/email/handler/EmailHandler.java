@@ -1,6 +1,6 @@
 package ddns.cli.command.config.email.handler;
 
-import ddns.client.email.EmailInfo;
+import ddns.client.domain.email.EmailInfo;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import picocli.CommandLine.PicocliException;

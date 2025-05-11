@@ -1,7 +1,7 @@
 package ddns.cli.command.config.email.show;
 
 import ddns.cli.command.config.email.EmailCommand;
-import ddns.client.email.EmailInfo;
+import ddns.client.domain.email.EmailInfo;
 import ddns.client.email.EmailService;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;

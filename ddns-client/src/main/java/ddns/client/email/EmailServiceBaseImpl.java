@@ -2,6 +2,7 @@ package ddns.client.email;
 
 import com.google.gson.Gson;
 import ddns.client.domain.IP;
+import ddns.client.domain.email.EmailInfo;
 import jakarta.inject.Inject;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
