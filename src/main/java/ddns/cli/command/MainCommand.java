@@ -4,6 +4,7 @@ import ddns.cli.command.client.ClientCommand;
 import ddns.cli.command.config.ConfigCommand;
 import ddns.cli.command.profile.ProfileCommand;
 import ddns.client.daemon.DaemonClient;
+import ddns.client.email.EmailService;
 import ddns.client.profile.ProfileClient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class MainCommand {
 
     private final DaemonClient daemonClient;
     private final ProfileClient profileClient;
+    private final EmailService emailService;
 
     @Option(names = {"--base-dir"},
             description = "Path to ddns-cli base directory, by default: ~/.ddns-cli")

@@ -15,5 +15,5 @@ public interface ProfileClient {
 
     void updateProfile(Profile profile, String basePath);
 
-    void removeProfile(String name, String basePath);
+    boolean removeProfile(String name, String basePath);
 }

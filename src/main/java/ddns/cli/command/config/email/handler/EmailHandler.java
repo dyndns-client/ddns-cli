@@ -40,13 +40,15 @@ public class EmailHandler {
         boolean ssl = useSmtpSsl.equals("y");
         smtpProps.put("mail.smtp.ssl.enable", String.valueOf(ssl));
 
-        System.out.println("Enter 'y' if need use mail.smtp.starttls, or 'n' otherwise");
-        String useStarttls = scanner.nextLine();
-        if (!"y".equals(useStarttls) && !"n".equals(useStarttls)) {
-            throw new PicocliException("Invalid option value, try again.");
+        if (!ssl) {
+            System.out.println("Enter 'y' if need use mail.smtp.starttls, or 'n' otherwise");
+            String useStarttls = scanner.nextLine();
+            if (!"y".equals(useStarttls) && !"n".equals(useStarttls)) {
+                throw new PicocliException("Invalid option value, try again.");
+            }
+            boolean starttls = useStarttls.equals("y");
+            smtpProps.put("mail.smtp.starttls.enable", String.valueOf(starttls));
         }
-        boolean starttls = useStarttls.equals("y");
-        smtpProps.put("mail.smtp.starttls.enable", String.valueOf(starttls));
 
         System.out.println("Enter smtp host:");
         String smtpHost = scanner.nextLine();
@@ -79,6 +81,7 @@ public class EmailHandler {
                 .to(to)
                 .password(smtpPassword)
                 .smtpProps(smtpProps)
+                .subject(subject)
                 .build();
     }
 }

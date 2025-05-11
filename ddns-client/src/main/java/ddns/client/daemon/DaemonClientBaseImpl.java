@@ -6,6 +6,7 @@ import ddns.client.discovery.StunDiscoveryService;
 import ddns.client.domain.DiscoveryMethod;
 import ddns.client.domain.IP;
 import ddns.client.domain.Profile;
+import ddns.client.email.EmailService;
 import ddns.client.exception.DiscoveryException;
 import ddns.client.profile.ProfileClient;
 import ddns.client.profile.ProfileLogger;
@@ -27,6 +28,7 @@ public class DaemonClientBaseImpl implements DaemonClient {
     private final StunDiscoveryService stunDiscoveryService;
     private final DnsDiscoveryService dnsDiscoveryService;
     private final HttpDiscoveryService httpDiscoveryService;
+    private final EmailService emailService;
 
     @SneakyThrows
     @Override
@@ -58,6 +60,7 @@ public class DaemonClientBaseImpl implements DaemonClient {
                             if (updated) {
                                 profile.setLastUpdateIp(currentIp);
                                 profileClient.updateProfile(profile, basePath);
+                                sendEmail(currentIp);
                             }
                         }
                     } else {
@@ -65,7 +68,14 @@ public class DaemonClientBaseImpl implements DaemonClient {
                         if (updated) {
                             profile.setLastUpdateIp(currentIp);
                             profileClient.updateProfile(profile, basePath);
+                            sendEmail(currentIp);
                         }
+                    }
+                }
+
+                private void sendEmail(IP currentIp) {
+                    if (emailService.getEmailInfo(basePath).isPresent()) {
+                        emailService.sendEmail(emailService.getEmailInfo(basePath).get(), currentIp);
                     }
                 }
             }, 0, delay, TimeUnit.SECONDS);

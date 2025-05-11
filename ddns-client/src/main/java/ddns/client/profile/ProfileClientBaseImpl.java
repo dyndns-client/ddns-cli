@@ -92,7 +92,18 @@ public class ProfileClientBaseImpl implements ProfileClient {
     }
 
     @Override
-    public void removeProfile(String name, String basePath) {
+    public boolean removeProfile(String name, String basePath) {
+        basePath += "/profiles";
+        File dir = new File(basePath);
+        if (!dir.exists()) {
+            return false;
+        }
 
+        File file = new File(basePath + File.separator + name + ".json");
+        if (!file.exists()) {
+            return false;
+        }
+
+        return file.delete();
     }
 }

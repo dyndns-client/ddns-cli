@@ -8,6 +8,8 @@ import ddns.client.daemon.DaemonClientBaseImpl;
 import ddns.client.discovery.DnsDiscoveryService;
 import ddns.client.discovery.HttpDiscoveryService;
 import ddns.client.discovery.StunDiscoveryService;
+import ddns.client.email.EmailService;
+import ddns.client.email.EmailServiceBaseImpl;
 import ddns.client.profile.ProfileClient;
 import ddns.client.profile.ProfileClientBaseImpl;
 
@@ -18,12 +20,18 @@ public class ClientConfig {
     public DaemonClient provideDaemonClient(ProfileClient profileClient,
                                             StunDiscoveryService stunDiscoveryService,
                                             DnsDiscoveryService dnsDiscoveryService,
-                                            HttpDiscoveryService httpDiscoveryService) {
-        return new DaemonClientBaseImpl(profileClient, stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService);
+                                            HttpDiscoveryService httpDiscoveryService,
+                                            EmailService emailService) {
+        return new DaemonClientBaseImpl(profileClient, stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService, emailService);
     }
 
     @Provides
-    public ProfileClient profileProfileClient(Gson gson) {
+    public ProfileClient provideProfileClient(Gson gson) {
         return new ProfileClientBaseImpl(gson);
+    }
+
+    @Provides
+    public EmailService provideEmailService(Gson gson) {
+        return new EmailServiceBaseImpl(gson);
     }
 }

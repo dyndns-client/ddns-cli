@@ -1,9 +1,8 @@
-package ddns.cli.command.config.email.info;
+package ddns.cli.command.config.email.show;
 
 import ddns.cli.command.config.email.EmailCommand;
 import ddns.client.email.EmailInfo;
 import ddns.client.email.EmailService;
-import ddns.client.email.EmailServiceBaseImpl;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
@@ -15,15 +14,14 @@ import static picocli.CommandLine.ExitCode.OK;
 @Command(name = "show",
         description = "Show email info for receive IP update mails",
         mixinStandardHelpOptions = true)
-public class EmailInfoCommand implements Callable<Integer> {
-
-    private final EmailService emailService = new EmailServiceBaseImpl();
+public class EmailShowCommand implements Callable<Integer> {
 
     @ParentCommand
     private EmailCommand parent;
 
     @Override
     public Integer call() {
+        EmailService emailService = parent.getParent().getMainCommand().getEmailService();
         Optional<EmailInfo> emailInfo = emailService.getEmailInfo(parent.getParent().getMainCommand().getBasePath());
         if (emailInfo.isPresent()) {
             System.out.println(emailInfo.get());

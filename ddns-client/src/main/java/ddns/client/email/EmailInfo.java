@@ -16,4 +16,5 @@ public class EmailInfo {
     private String from;
     private String to;
     private String password;
+    private String subject;
 }
