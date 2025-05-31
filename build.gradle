@@ -1,14 +1,12 @@
 buildscript {
     ext {
         shadowJarVersion = '7.1.2'
-        graalvmNativeImageVersion = '0.10.5'
     }
 }
 
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version "${shadowJarVersion}"
-    id 'org.graalvm.buildtools.native' version "${graalvmNativeImageVersion}"
     id 'checkstyle'
 }
 
@@ -24,31 +22,6 @@ shadowJar {
     archiveVersion.set('1.0.0')
     manifest {
         attributes 'Main-Class': 'ddns.cli.App'
-    }
-}
-
-graalvmNative {
-    binaries {
-        main {
-            imageName = 'application'
-            mainClass = 'ddns.cli.App'
-            verbose = true
-            useFatJar = true
-            debug = false
-            sharedLibrary = false
-            quickBuild = false
-            richOutput = false
-            buildArgs.add('-O1')
-            buildArgs.add('-march=native')
-            buildArgs.add('--initialize-at-build-time')
-            buildArgs.add('--enable-url-protocols=http')
-            buildArgs.add('--no-server')
-            buildArgs.add('--no-fallback')
-            javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(17)
-                vendor = JvmVendorSpec.matching("Oracle Corporation")
-            }
-        }
     }
 }
 

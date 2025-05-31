@@ -16,4 +16,6 @@ public interface ProfileClient {
     void updateProfile(Profile profile, String basePath);
 
     boolean removeProfile(String name, String basePath);
+
+    List<String> getProfileLogs(String name, String basePath);
 }

@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 import static picocli.CommandLine.ExitCode.OK;
 
 @Command(name = "remove",
-        description = "Remove profile",
+        description = "Remove profile.",
         mixinStandardHelpOptions = true)
 public class ProfileRemoveCommand implements Callable<Integer> {
 

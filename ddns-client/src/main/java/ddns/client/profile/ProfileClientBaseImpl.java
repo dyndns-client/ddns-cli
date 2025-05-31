@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -105,5 +106,32 @@ public class ProfileClientBaseImpl implements ProfileClient {
         }
 
         return file.delete();
+    }
+
+    @Override
+    public List<String> getProfileLogs(String name, String basePath) {
+        basePath += "/profiles";
+        File dir = new File(basePath);
+        if (!dir.exists()) {
+            return List.of();
+        }
+
+        File file = new File(basePath + File.separator + name + ".logs");
+        if (!file.exists()) {
+            return List.of();
+        }
+
+        List<String> logs = new ArrayList<>();
+        try (FileReader reader = new FileReader(file);
+             BufferedReader bufferedReader = new BufferedReader(reader)) {
+            while (bufferedReader.ready()) {
+                String line = bufferedReader.readLine();
+                logs.add(line);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return logs;
     }
 }

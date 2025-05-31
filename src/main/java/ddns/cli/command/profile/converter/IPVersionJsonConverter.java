@@ -13,11 +13,11 @@ public class IPVersionJsonConverter implements CommandLine.ITypeConverter<IPVers
     @Override
     public IPVersion convert(String value) throws Exception {
         if (Objects.nonNull(value) && "4".equals(value)) {
-            return IPVersion.IPV4;
+            return IPVersion.IPv4;
         }
 
         if (Objects.nonNull(value) && "6".equals(value)) {
-            return IPVersion.IPV6;
+            return IPVersion.IPv6;
         }
 
         return null;

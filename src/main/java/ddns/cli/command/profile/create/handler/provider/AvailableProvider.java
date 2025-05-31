@@ -1,4 +1,4 @@
-package ddns.client.domain;
+package ddns.cli.command.profile.create.handler.provider;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

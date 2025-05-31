@@ -7,7 +7,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
 @Command(name = "client",
-        description = "Dynamic DNS Client",
+        description = "Dynamic DNS Client.",
         mixinStandardHelpOptions = true,
         subcommands = {ClientStartCommand.class})
 @Getter

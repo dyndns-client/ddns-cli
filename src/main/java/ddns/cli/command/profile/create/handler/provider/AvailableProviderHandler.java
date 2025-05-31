@@ -1,7 +1,6 @@
 package ddns.cli.command.profile.create.handler.provider;
 
 import ddns.client.domain.AddressUpdateInfo;
-import ddns.client.domain.AvailableProvider;
 import picocli.CommandLine.PicocliException;
 
 import java.util.Map;

@@ -38,11 +38,9 @@ public class StunDiscoveryService {
             socket.receive(responsePacket);
 
             String publicIp = parseStunResponse(responsePacket.getData(), responsePacket.getLength(), stunRequest.transactionId);
-            System.out.println("STUN public IP: " + publicIp);
 
             return new IP(publicIp);
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
             throw new DiscoveryException(e.getMessage());
         }
     }
@@ -84,24 +82,38 @@ public class StunDiscoveryService {
 
         // Find attributes
         int offset = 20; // STUN Header - 20 bytes
-        while (offset < response.length) {
+        while (offset < length) {
             short attrType = buffer.getShort(offset);
             short attrLength = buffer.getShort(offset + 2);
 
-            if (attrType == 0x0020) { // XOR-MAPPED-ADDRESS
+            if (attrType == 0x0020 || attrType == 0x0001) { // XOR-MAPPED-ADDRESS
                 byte family = buffer.get(offset + 5); // 0x01 = IPv4, 0x02 = IPv6
+
+                // Cast signed Short to Int
+                int xport = buffer.getShort(offset + 6) & 0xFFFF;
+                // do XOR with Magic Cookie
+                int port = (attrType == 0x0020) ? (xport ^ 0x2112) : xport;
+
                 byte[] ipBytes;
-
-                // Cast signed Short to Int and do XOR with Magic Cookie
-                int port = (buffer.getShort(offset + 6) & 0xFFFF) ^ 0x2112;
-
                 if (family == 0x01) { // IPv4
-                    ipBytes = new byte[]{
-                            (byte) (buffer.get(offset + 8) ^ 0x21),
-                            (byte) (buffer.get(offset + 9) ^ 0x12),
-                            (byte) (buffer.get(offset + 10) ^ 0xA4),
-                            (byte) (buffer.get(offset + 11) ^ 0x42)
-                    };
+                    ipBytes = new byte[4];
+                    for (int i = 0; i < 4; i++) {
+                        byte b = buffer.get(offset + 8 + i);
+                        ipBytes[i] = (attrType == 0x0020) ? (byte) (b ^ new byte[]{0x21, 0x12, (byte) 0xA4, 0x42}[i]) : b;
+                    }
+                    return InetAddress.getByAddress(ipBytes).getHostAddress();
+                } else if (family == 0x02) { //IPv6
+                    ipBytes = new byte[16];
+                    byte[] xorMask = new byte[16];
+                    // XOR mask = Magic Cookie + Transaction ID
+                    ByteBuffer xorBuffer = ByteBuffer.wrap(xorMask);
+                    xorBuffer.putInt(0x2112A442);          // Magic Cookie
+                    xorBuffer.put(transactionId);          // 12-byte transaction ID
+
+                    for (int i = 0; i < 16; i++) {
+                        byte b = buffer.get(offset + 8 + i);
+                        ipBytes[i] = (attrType == 0x0020) ? (byte) (b ^ xorMask[i]) : b;
+                    }
                     return InetAddress.getByAddress(ipBytes).getHostAddress();
                 }
             }

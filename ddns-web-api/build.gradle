@@ -16,5 +16,8 @@ ext {
 dependencies {
     implementation project(':ddns-client')
 
+    // https://mvnrepository.com/artifact/org.freemarker/freemarker
+    implementation("org.freemarker:freemarker:2.3.34")
+
     implementation "org.apache.httpcomponents.core5:httpcore5:${httpcomponentsCoreVersion}"
 }

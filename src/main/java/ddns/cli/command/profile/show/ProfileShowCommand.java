@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 import static picocli.CommandLine.ExitCode.OK;
 
 @Command(name = "show",
-        description = "Show profile",
+        description = "Show profile.",
         mixinStandardHelpOptions = true)
 public class ProfileShowCommand implements Callable<Integer> {
 

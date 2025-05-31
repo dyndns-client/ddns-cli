@@ -11,9 +11,9 @@ import java.util.concurrent.Callable;
 import static picocli.CommandLine.ExitCode.OK;
 
 @Command(name = "clear",
-        description = "Clear email info for receive IP update mails",
+        description = "Clear email info for receive IP update mails.",
         mixinStandardHelpOptions = true)
-public class ClearCommand implements Callable<Integer> {
+public class EmailClearCommand implements Callable<Integer> {
 
     @ParentCommand
     private EmailCommand parent;
@@ -28,7 +28,7 @@ public class ClearCommand implements Callable<Integer> {
             );
         } else {
             System.out.println(
-                    CommandLine.Help.Ansi.AUTO.text("No Email info saved.")
+                    CommandLine.Help.Ansi.AUTO.text("No saved email info.")
             );
         }
         return OK;

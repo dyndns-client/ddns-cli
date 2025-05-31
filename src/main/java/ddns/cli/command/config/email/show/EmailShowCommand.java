@@ -1,5 +1,7 @@
 package ddns.cli.command.config.email.show;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ddns.cli.command.config.email.EmailCommand;
 import ddns.client.domain.email.EmailInfo;
 import ddns.client.email.EmailService;
@@ -12,9 +14,11 @@ import java.util.concurrent.Callable;
 import static picocli.CommandLine.ExitCode.OK;
 
 @Command(name = "show",
-        description = "Show email info for receive IP update mails",
+        description = "Show email info for receive IP update mails.",
         mixinStandardHelpOptions = true)
 public class EmailShowCommand implements Callable<Integer> {
+
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @ParentCommand
     private EmailCommand parent;
@@ -24,7 +28,7 @@ public class EmailShowCommand implements Callable<Integer> {
         EmailService emailService = parent.getParent().getMainCommand().getEmailService();
         Optional<EmailInfo> emailInfo = emailService.getEmailInfo(parent.getParent().getMainCommand().getBasePath());
         if (emailInfo.isPresent()) {
-            System.out.println(emailInfo.get());
+            System.out.println(gson.toJson(emailInfo.get()));
         } else {
             System.out.println("No saved email info.");
         }

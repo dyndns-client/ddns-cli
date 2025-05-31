@@ -1,7 +1,7 @@
 package ddns.client.discovery;
 
 import ddns.client.domain.IP;
-import ddns.client.domain.IPVersion;
+import ddns.client.domain.dns.DnsRecordType;
 import ddns.client.domain.dns.DnsServerInfo;
 import ddns.client.exception.DiscoveryException;
 import jakarta.inject.Inject;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Random;
@@ -19,13 +20,13 @@ public class DnsDiscoveryService {
 
     private final Random random = new Random();
 
-    public IP discover(IPVersion ipVersion, DnsServerInfo dnsServerInfo, int socketTimeout) throws DiscoveryException {
+    public IP discover(DnsServerInfo dnsServerInfo, int socketTimeout) throws DiscoveryException {
         try (DatagramSocket socket = new DatagramSocket()) {
             socket.setSoTimeout(socketTimeout);
 
             InetAddress serverAddress = InetAddress.getByName(dnsServerInfo.getDnsResolverName());
             socket.connect(serverAddress, dnsServerInfo.getPort());
-            DnsRequest dnsQuery = buildDNSQuery(dnsServerInfo.getDomainName());
+            DnsRequest dnsQuery = buildDNSQuery(dnsServerInfo.getDnsRecordType(), dnsServerInfo.getDomainName());
 
             DatagramPacket requestPacket = new DatagramPacket(dnsQuery.payload, dnsQuery.payload.length);
             socket.send(requestPacket);
@@ -34,15 +35,14 @@ public class DnsDiscoveryService {
             DatagramPacket responsePacket = new DatagramPacket(response, response.length);
             socket.receive(responsePacket);
 
-            String publicIp = parseDNSResponse(responsePacket.getData(), responsePacket.getLength(), dnsQuery.transactionId);
+            String publicIp = parseDNSResponse(responsePacket.getData(), responsePacket.getLength(), dnsQuery.transactionId, dnsServerInfo.getDnsRecordType());
             return new IP(publicIp);
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
             throw new DiscoveryException(e.getMessage());
         }
     }
 
-    private DnsRequest buildDNSQuery(String domainName) {
+    private DnsRequest buildDNSQuery(DnsRecordType dnsRecordType, String domainName) {
         ByteBuffer buffer = ByteBuffer.allocate(128);
 
         byte[] transactionId = new byte[2];
@@ -61,7 +61,13 @@ public class DnsDiscoveryService {
         }
         buffer.put((byte) 0x00); // End of domain name
 
-        buffer.putShort((short) 0x0001); // Type A
+        short recordTypeCode = switch (dnsRecordType) {
+            case A -> (short) 0x0001;
+            case AAAA -> (short) 0x001C;
+            case TXT -> (short) 0x0010;
+        };
+
+        buffer.putShort(recordTypeCode); // Type
         buffer.putShort((short) 0x0001); // Class IN
 
         byte[] query = new byte[buffer.position()];
@@ -71,10 +77,10 @@ public class DnsDiscoveryService {
         return new DnsRequest(query, transactionId);
     }
 
-    private String parseDNSResponse(byte[] response, int length, byte[] transactionId) throws DiscoveryException {
+    private String parseDNSResponse(byte[] response, int length, byte[] transactionId, DnsRecordType dnsRecordType) throws DiscoveryException, UnknownHostException {
         ByteBuffer buffer = ByteBuffer.wrap(response, 0, length);
         byte[] receivedTransactionId = new byte[2];
-        buffer.get(0, receivedTransactionId); // Transaction ID
+        buffer.get(receivedTransactionId); // Transaction ID
         buffer.getShort(); // Flags
         int questions = buffer.getShort(); // Questions
         int answers = buffer.getShort(); // Answer RRs
@@ -86,30 +92,52 @@ public class DnsDiscoveryService {
         }
 
         for (int i = 0; i < questions; i++) {
-            skipName(buffer); // Name
+            skipName(buffer);
             buffer.getShort(); // Type
             buffer.getShort(); // Class
         }
 
         for (int i = 0; i < answers; i++) {
-            skipName(buffer); // Name
-            int type = buffer.getShort() & 0xFFFF; // Type
+            skipName(buffer);
+            int type = buffer.getShort() & 0xFFFF;
             buffer.getShort(); // Class
             buffer.getInt(); // TTL
-            int dataLength = buffer.getShort() & 0xFFFF; // Data length
+            int dataLength = buffer.getShort() & 0xFFFF;
 
-            if (type == 0x0001 && dataLength == 4) { // A record
-                byte[] ip = new byte[4];
-                buffer.get(ip);
-                String answer = "IP: " + (ip[0] & 0xFF) + "." + (ip[1] & 0xFF) + "." + (ip[2] & 0xFF) + "." + (ip[3] & 0xFF);
-                System.out.println(answer);
-                return answer;
-            } else {
-                buffer.position(buffer.position() + dataLength);
+            switch (dnsRecordType) {
+                case A -> {
+                    if (type == 0x0001 && dataLength == 4) {
+                        byte[] ipBytes = new byte[4];
+                        buffer.get(ipBytes);
+                        return InetAddress.getByAddress(ipBytes).getHostAddress();
+                    }
+                }
+                case AAAA -> {
+                    if (type == 0x001C && dataLength == 16) {
+                        byte[] ipBytes = new byte[16];
+                        buffer.get(ipBytes);
+                        return InetAddress.getByAddress(ipBytes).getHostAddress();
+                    }
+                }
+                case TXT -> {
+                    if (type == 0x0010 && dataLength > 0) {
+                        int txtEnd = buffer.position() + dataLength;
+                        StringBuilder sb = new StringBuilder();
+                        while (buffer.position() < txtEnd) {
+                            int txtLen = buffer.get() & 0xFF;
+                            byte[] txtData = new byte[txtLen];
+                            buffer.get(txtData);
+                            sb.append(new String(txtData)); // Assuming UTF-8 or ASCII
+                        }
+                        return sb.toString();
+                    }
+                }
             }
+
+            buffer.position(buffer.position() + dataLength);
         }
 
-        throw new DiscoveryException("Public IP not found!");
+        throw new DiscoveryException("DNS record not found!");
     }
 
     private void skipName(ByteBuffer buffer) {

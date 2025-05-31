@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 import static picocli.CommandLine.ExitCode.OK;
 
 @Command(name = "configure",
-        description = "Configuring email info for receive IP update mails",
+        description = "Configuring email info for receive IP update mails.",
         mixinStandardHelpOptions = true)
 public class EmailConfigureCommand implements Callable<Integer> {
 

@@ -16,6 +16,7 @@ import ddns.client.domain.IPVersion;
 import ddns.client.domain.Profile;
 import ddns.client.domain.Profile.ProfileBuilder;
 import ddns.client.domain.dns.DnsDiscoveryInfo;
+import ddns.client.domain.dns.DnsRecordType;
 import ddns.client.domain.http.HttpDiscoveryInfo;
 import ddns.client.domain.stun.StunDiscoveryInfo;
 import lombok.Data;
@@ -132,6 +133,10 @@ public class ProfileCreateCommand implements Callable<Integer> {
                 );
                 builder.discoveryMethod(DiscoveryMethod.DNS);
                 builder.dnsDiscoveryInfo(dnsDiscoveryInfo);
+                if (commonOptions.ipVersion == IPVersion.IPv4 && dnsDiscoveryInfo.getServer().getDnsRecordType() == DnsRecordType.AAAA ||
+                        commonOptions.ipVersion == IPVersion.IPv6 && dnsDiscoveryInfo.getServer().getDnsRecordType() == DnsRecordType.A) {
+                    throw new PicocliException("IP version and DNS record mismatch.");
+                }
                 break;
             }
             case HTTP: {

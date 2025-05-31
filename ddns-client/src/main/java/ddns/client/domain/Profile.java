@@ -27,7 +27,7 @@ public class Profile {
      * IP version. IPv4 by default
      */
     @Builder.Default
-    private IPVersion ipVersion = IPVersion.IPV4;
+    private IPVersion ipVersion = IPVersion.IPv4;
 
     /**
      * Dynamic DNS Provider info for update IP

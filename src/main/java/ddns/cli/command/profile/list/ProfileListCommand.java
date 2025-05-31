@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static picocli.CommandLine.ExitCode.OK;
 
 @Command(name = "list",
-        description = "List saved profiles",
+        description = "List saved profiles.",
         mixinStandardHelpOptions = true)
 public class ProfileListCommand implements Callable<Integer> {
 
