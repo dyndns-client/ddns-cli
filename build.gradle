@@ -44,6 +44,7 @@ allprojects {
         lombokVersion = '1.18.36'
         gsonVersion = '2.12.1'
         junitBomVersion = '5.10.0'
+        httpcomponentsCoreVersion = '5.3.4'
     }
 
     dependencies {
@@ -75,6 +76,7 @@ dependencies {
 
     implementation "info.picocli:picocli:${picocliVersion}"
     annotationProcessor "info.picocli:picocli-codegen:${picocliVersion}"
+    implementation "org.apache.httpcomponents.core5:httpcore5:${httpcomponentsCoreVersion}"
 
     implementation("commons-codec:commons-codec:1.18.0")
 }

@@ -43,12 +43,10 @@ public class EmailEditHandler extends HandlerBase implements HttpRequestHandler 
     @SneakyThrows
     @Override
     public void handle(ClassicHttpRequest request, ClassicHttpResponse response, HttpContext httpContext) throws HttpException, IOException {
-        String cookie = UserSessionHolder.getSessionIdFromCookies(request.getHeader("cookie").getValue());
-        if (cookie == null) {
-            response.setCode(302); // HTTP 302 Found (редирект)
-            response.addHeader("Location", "/login");
+        if (!isSessionIdValid(request, response)) {
             return;
         }
+
         String method = request.getMethod();
         if ("GET".equalsIgnoreCase(method)) {
             get(response);

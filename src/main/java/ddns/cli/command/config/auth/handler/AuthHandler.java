@@ -22,21 +22,23 @@ public class AuthHandler {
             throw new PicocliException("Username cannot be empty.");
         }
 
-        System.out.println("Enter session duration is seconds, or press 'ENTER' for use default: 3600");
+        int seconds = 604800;
+        System.out.println("Enter session duration is seconds, or press 'ENTER' for use default: " + seconds);
         String sessionDuration = scanner.nextLine();
-        int num;
-        try {
-            num = Integer.parseInt(sessionDuration);
-            if (num < 0) {
-                throw new PicocliException("Session duration cannot be negative.");
+        if (!sessionDuration.isEmpty()) {
+            try {
+                seconds = Integer.parseInt(sessionDuration);
+                if (seconds < 0) {
+                    throw new PicocliException("Session duration cannot be negative.");
+                }
+            } catch (Exception e) {
+                if (e instanceof PicocliException) {
+                    throw e;
+                }
+                throw new PicocliException("Invalid session duration: " + sessionDuration);
             }
-        } catch (Exception e) {
-            if (e instanceof PicocliException) {
-                throw e;
-            }
-            throw new PicocliException("Invalid session duration: " + sessionDuration);
         }
 
-        return new Auth(username, password, num);
+        return new Auth(username, password, seconds);
     }
 }

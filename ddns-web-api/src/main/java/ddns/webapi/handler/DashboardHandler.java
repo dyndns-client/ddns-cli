@@ -33,6 +33,10 @@ public class DashboardHandler extends HandlerBase implements HttpRequestHandler 
     @SneakyThrows
     @Override
     public void handle(ClassicHttpRequest request, ClassicHttpResponse response, HttpContext httpContext) throws HttpException, IOException {
+        if (!isSessionIdValid(request, response)) {
+            return;
+        }
+
         Map<String, Object> data = new HashMap<>();
         data.put("title", "Dashboard");
         if (emailService.getEmailInfo(basePath).isPresent()) {

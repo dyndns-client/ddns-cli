@@ -3,7 +3,6 @@ package ddns.client.auth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ddns.client.domain.Auth;
-import ddns.client.domain.email.EmailInfo;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -25,7 +24,7 @@ public class AuthServiceImpl implements AuthService {
             boolean ignore = file.mkdirs();
         }
 
-        basePath += "/auth.json";
+        basePath += "/auth-config.json";
         File config = new File(basePath);
         if (!config.exists()) {
             boolean ignore = config.createNewFile();
@@ -48,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             return Optional.empty();
         }
 
-        basePath += "/auth.json";
+        basePath += "/auth-config.json";
         File config = new File(basePath);
         if (!config.exists()) {
             return Optional.empty();
@@ -70,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
 
-        basePath += "/auth.json";
+        basePath += "/auth-config.json";
         File config = new File(basePath);
         if (!config.exists()) {
             return false;

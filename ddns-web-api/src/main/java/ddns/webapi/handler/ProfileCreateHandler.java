@@ -80,10 +80,7 @@ public class ProfileCreateHandler extends HandlerBase implements HttpRequestHand
 
     @SneakyThrows
     private void post(ClassicHttpRequest request, ClassicHttpResponse response) {
-        String cookie = UserSessionHolder.getSessionIdFromCookies(request.getHeader("cookie").getValue());
-        if (cookie == null) {
-            response.setCode(302); // HTTP 302 Found (редирект)
-            response.addHeader("Location", "/login");
+        if (!isSessionIdValid(request, response)) {
             return;
         }
 
@@ -116,6 +113,7 @@ public class ProfileCreateHandler extends HandlerBase implements HttpRequestHand
 
         System.out.println(gson.toJson(profile));
         profileClient.addProfile(profile, basePath);
+        daemonClient.addProfileToWork(profile, basePath);
 
         response.setCode(302); // HTTP 302 Found (редирект)
         response.addHeader("Location", "/dashboard?message=Profile created successfully!");

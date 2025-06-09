@@ -31,9 +31,11 @@ public class DaemonProfileTask implements Runnable {
     @Override
     public void run() {
         try {
-            IpUpdater updater = new IpUpdater(basePath);
-            IP ip = discoverIp(basePath, profile);
-            update(updater, ip);
+            if (profile.isActive()) {
+                IpUpdater updater = new IpUpdater(basePath);
+                IP ip = discoverIp(basePath, profile);
+                update(updater, ip);
+            }
         } catch (DiscoveryException e) {
             ProfileLogger.error(basePath, profile.getName(), e.getMessage());
         }
@@ -41,7 +43,7 @@ public class DaemonProfileTask implements Runnable {
 
     private void update(IpUpdater updater, IP currentIp) {
         IP lastUpdateIp = profile.getLastUpdateIp();
-        if (Objects.nonNull(lastUpdateIp)) {
+        if (Objects.nonNull(lastUpdateIp) && Objects.nonNull(lastUpdateIp.getValue())) {
             if (!currentIp.equals(lastUpdateIp)) {
                 ProfileLogger.info(basePath, profile.getName(), "IP changed from " + lastUpdateIp + " to " + currentIp);
                 boolean updated = updater.update(currentIp, profile);
@@ -52,13 +54,14 @@ public class DaemonProfileTask implements Runnable {
                 }
             }
         } else {
-            boolean updated = updater.update(currentIp, profile);
-//                        profile.setLastUpdateIp(currentIp);
-            if (updated) {
-                profile.setLastUpdateIp(currentIp);
-                profileClient.updateProfile(profile, basePath);
-                sendEmail(currentIp);
-            }
+//            boolean updated = updater.update(currentIp, profile);
+                        profile.setLastUpdateIp(currentIp);
+                        profileClient.updateProfile(profile, basePath);
+//            if (updated) {
+//                profile.setLastUpdateIp(currentIp);
+//                profileClient.updateProfile(profile, basePath);
+//                sendEmail(currentIp);
+//            }
         }
     }
 
@@ -74,7 +77,6 @@ public class DaemonProfileTask implements Runnable {
         switch (discoveryMethod) {
             case STUN:
                 ip = stunDiscoveryService.discover(
-                        profile.getIpVersion(),
                         profile.getStunDiscoveryInfo().getServer(),
                         profile.getStunDiscoveryInfo().getSocketTimeout()
                 );

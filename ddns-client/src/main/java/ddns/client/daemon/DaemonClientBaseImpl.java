@@ -10,7 +10,10 @@ import ddns.client.utils.ProfileUtils;
 import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +27,9 @@ public class DaemonClientBaseImpl implements DaemonClient {
     private final HttpDiscoveryService httpDiscoveryService;
     private final EmailService emailService;
 
-    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(128);
+
+    private final Map<String, Profile> profiles = new HashMap<>();
 
     @Override
     public void start(String basePath) {
@@ -42,9 +47,19 @@ public class DaemonClientBaseImpl implements DaemonClient {
     @Override
     public void addProfileToWork(Profile profile, String basePath) {
         int delay = ProfileUtils.getDelay(profile);
+        profiles.put(profile.getName(), profile);
         executor.scheduleWithFixedDelay(
                 new DaemonProfileTask(
                         profileClient, stunDiscoveryService, dnsDiscoveryService, httpDiscoveryService, emailService, basePath, profile
                 ), 0, delay, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void removeProfileFromWork(String profileName, String basePath) {
+        Profile profile = profiles.get(profileName);
+        if (Objects.nonNull(profile)) {
+            profile.setActive(false);
+        }
+        profileClient.removeProfile(profileName, basePath);
     }
 }

@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class LoginHandler extends HandlerBase implements HttpRequestHandler {
@@ -63,14 +62,13 @@ public class LoginHandler extends HandlerBase implements HttpRequestHandler {
         if (auth.getUsername().equals(username) && auth.getPassword().equals(password)) {
             String sessionId = UserSessionHolder.generateAndSaveSessionId();
             response.addHeader("Set-Cookie",
-                    "sessionId=" + sessionId + "; Path=/; HttpOnly; Max-Age=36000");
+                    "sessionId=" + sessionId + "; Path=/; HttpOnly; Max-Age=" + auth.getSessionDuration());
             response.setCode(302); // HTTP 302 Found (редирект)
             response.addHeader("Location", "/dashboard");
         } else {
             response.setCode(401);
             response.setEntity(new StringEntity("Login failed", ContentType.TEXT_PLAIN));
         }
-
     }
 
     private Map<String, List<String>> parseForm(String formData) {

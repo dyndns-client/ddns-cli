@@ -44,6 +44,10 @@ public class ProfileShowHandler extends HandlerBase implements HttpRequestHandle
     @SneakyThrows
     @Override
     public void handle(ClassicHttpRequest request, ClassicHttpResponse response, HttpContext httpContext) throws HttpException, IOException {
+        if (!isSessionIdValid(request, response)) {
+            return;
+        }
+
         URI uri = request.getUri();
         Map<String, String> params = new URIBuilder(uri).getQueryParams().stream()
                 .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));

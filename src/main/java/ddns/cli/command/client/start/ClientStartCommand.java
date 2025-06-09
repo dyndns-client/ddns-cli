@@ -8,6 +8,8 @@ import ddns.client.domain.Auth;
 import ddns.webapi.WebApi;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.apache.hc.core5.http.impl.bootstrap.HttpServer;
+import org.apache.hc.core5.util.TimeValue;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -44,14 +46,20 @@ public class ClientStartCommand implements Callable<Integer> {
         String basePath = clientCommand.getMainCommand().getBasePath();
         daemonClient.start(basePath);
         long pid = ProcessHandle.current().pid();
-        System.out.println(
-                CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Dynamic DNS Client started with PID: " + pid + "|@")
-        );
-        WebApi webApi = new WebApi();
-        webApi.start(port, basePath, clientCommand.getMainCommand().getProfileClient(), daemonClient);
-        System.out.println(
-                CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Dynamic DNS Web API started with port: " + port + "|@")
-        );
+        if (port != 0) {
+            WebApi webApi = new WebApi();
+            try (HttpServer server = webApi.start(port, basePath, clientCommand.getMainCommand().getProfileClient(), daemonClient)) {
+                server.start();
+                System.out.println(
+                        CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Dynamic DNS Client started with PID: " + pid + " and port: " + port +"|@")
+                );
+                server.awaitTermination(TimeValue.MAX_VALUE);
+            }
+        } else {
+            System.out.println(
+                    CommandLine.Help.Ansi.AUTO.text("@|bold,underline,bg(60),fg(46) Dynamic DNS Client started with PID: " + pid + "|@")
+            );
+        }
         boolean ignore = Executors.newSingleThreadExecutor().awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
         return OK;
     }

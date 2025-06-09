@@ -21,7 +21,7 @@ public class StunDiscoveryService {
 
     private final Random random = new Random();
 
-    public IP discover(IPVersion ipVersion, StunServerInfo stunServerInfo, int socketTimeout) throws DiscoveryException {
+    public IP discover(StunServerInfo stunServerInfo, int socketTimeout) throws DiscoveryException {
         try (DatagramSocket socket = new DatagramSocket()) {
             socket.setSoTimeout(socketTimeout);
 
@@ -86,7 +86,7 @@ public class StunDiscoveryService {
             short attrType = buffer.getShort(offset);
             short attrLength = buffer.getShort(offset + 2);
 
-            if (attrType == 0x0020 || attrType == 0x0001) { // XOR-MAPPED-ADDRESS
+            if (attrType == 0x0020 || attrType == 0x0001) { // (XOR) MAPPED-ADDRESS
                 byte family = buffer.get(offset + 5); // 0x01 = IPv4, 0x02 = IPv6
 
                 // Cast signed Short to Int
@@ -107,8 +107,8 @@ public class StunDiscoveryService {
                     byte[] xorMask = new byte[16];
                     // XOR mask = Magic Cookie + Transaction ID
                     ByteBuffer xorBuffer = ByteBuffer.wrap(xorMask);
-                    xorBuffer.putInt(0x2112A442);          // Magic Cookie
-                    xorBuffer.put(transactionId);          // 12-byte transaction ID
+                    xorBuffer.putInt(0x2112A442); // Magic Cookie
+                    xorBuffer.put(transactionId); // 12-byte transaction ID
 
                     for (int i = 0; i < 16; i++) {
                         byte b = buffer.get(offset + 8 + i);

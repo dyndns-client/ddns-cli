@@ -1,6 +1,5 @@
 package ddns.webapi;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ddns.client.daemon.DaemonClient;
 import ddns.client.profile.ProfileClient;
@@ -18,33 +17,32 @@ import org.apache.hc.core5.http.impl.bootstrap.ServerBootstrap;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.util.TimeValue;
 
+import java.io.IOException;
+
 import static ddns.client.constant.Defaults.DDNS_CLI_BASE_PATH;
 
 @RequiredArgsConstructor
 public class WebApi {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         WebApi webApi = new WebApi();
-        webApi.start(8081, DDNS_CLI_BASE_PATH, new ProfileClientBaseImpl(new GsonBuilder().setPrettyPrinting().create()), null);
+        HttpServer start = webApi.start(8081, DDNS_CLI_BASE_PATH, new ProfileClientBaseImpl(new GsonBuilder().setPrettyPrinting().create()), null);
+        start.start();
+        start.awaitTermination(TimeValue.MAX_VALUE);
     }
 
-    public void start(int port, String basePath, ProfileClient profileClient, DaemonClient daemonClient) {
-        try (HttpServer server = ServerBootstrap.bootstrap()
+    public HttpServer start(int port, String basePath, ProfileClient profileClient, DaemonClient daemonClient) {
+        return ServerBootstrap.bootstrap()
                 .setListenerPort(port)
                 .setCanonicalHostName("localhost")
                 .register("/login", new LoginHandler(basePath))
                 .register("/profile/show", new ProfileShowHandler(profileClient, basePath))
                 .register("/profile/create", new ProfileCreateHandler(profileClient, daemonClient, basePath))
-                .register("/profile/remove", new ProfileRemoveHandler(profileClient))
+                .register("/profile/remove", new ProfileRemoveHandler(daemonClient, basePath))
                 .register("/profile/logs", new ProfileLogsHandler(profileClient, basePath))
                 .register("/dashboard", new DashboardHandler(basePath, profileClient))
                 .register("/email/edit", new EmailEditHandler(basePath))
                 .setSocketConfig(SocketConfig.DEFAULT)
-                .create()) {
-            server.start();
-            server.awaitTermination(TimeValue.MAX_VALUE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                .create();
     }
 }

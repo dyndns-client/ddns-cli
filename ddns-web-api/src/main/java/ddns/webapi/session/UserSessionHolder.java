@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class UserSessionHolder {
 
-    private static final Set<String> sessions =new HashSet<>();
+    private static final Set<String> sessions = new HashSet<>();
 
     public static String generateAndSaveSessionId() {
         String sessionId = UUID.randomUUID().toString();

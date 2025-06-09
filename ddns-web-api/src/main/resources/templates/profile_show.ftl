@@ -85,7 +85,7 @@
 
                 <#if profile.discoveryMethod == "STUN">
                     <p><strong>Host:</strong> ${server.host}</p>
-                    <p><strong>Port:</strong> ${server.port}</p>
+                    <p><strong>Port:</strong> ${server.port?c}</p>
 
                 <#elseif profile.discoveryMethod == "HTTP">
                     <p><strong>URL:</strong> ${server.url}</p>

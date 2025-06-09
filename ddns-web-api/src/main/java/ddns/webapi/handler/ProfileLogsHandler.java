@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class ProfileLogsHandler implements HttpRequestHandler {
+public class ProfileLogsHandler extends HandlerBase implements HttpRequestHandler {
 
     private final ProfileClient profileClient;
     private final String basePath;
@@ -28,6 +28,10 @@ public class ProfileLogsHandler implements HttpRequestHandler {
     @SneakyThrows
     @Override
     public void handle(ClassicHttpRequest request, ClassicHttpResponse response, HttpContext httpContext) throws HttpException, IOException {
+        if (!isSessionIdValid(request, response)) {
+            return;
+        }
+
         URI uri = request.getUri();
         Map<String, String> params = new URIBuilder(uri).getQueryParams().stream()
                 .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
