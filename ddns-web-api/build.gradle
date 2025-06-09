@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group = 'ddns.webapi'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    httpcomponentsCoreVersion = '5.3.4'
+}
+
+dependencies {
+    implementation project(':ddns-client')
+
+    // https://mvnrepository.com/artifact/org.freemarker/freemarker
+    implementation("org.freemarker:freemarker:2.3.34")
+
+    implementation "org.apache.httpcomponents.core5:httpcore5:${httpcomponentsCoreVersion}"
+}

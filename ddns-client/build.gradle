@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group = 'ddns.client'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    httpcomponentsClientVersion = '5.4.2'
+}
+
+dependencies {
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+
+    implementation "org.apache.httpcomponents.client5:httpclient5:${httpcomponentsClientVersion}"
+}

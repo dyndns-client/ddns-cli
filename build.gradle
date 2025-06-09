@@ -1,0 +1,82 @@
+buildscript {
+    ext {
+        shadowJarVersion = '7.1.2'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version "${shadowJarVersion}"
+    id 'checkstyle'
+}
+
+group = 'ddns.cli'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+shadowJar {
+    archiveBaseName.set('ddns-cli-all')
+    archiveVersion.set('1.0.0')
+    manifest {
+        attributes 'Main-Class': 'ddns.cli.App'
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'checkstyle'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+
+    checkstyle {
+        toolVersion = "10.12.4"
+        configFile rootProject.file('checkstyle/checkstyle.xml')
+    }
+
+    ext {
+        daggerVersion = '2.55'
+        picocliVersion = '4.7.6'
+        lombokVersion = '1.18.36'
+        gsonVersion = '2.12.1'
+        junitBomVersion = '5.10.0'
+        httpcomponentsCoreVersion = '5.3.4'
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+        implementation "com.google.dagger:dagger:${daggerVersion}"
+        annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+
+        implementation("com.google.code.gson:gson:${gsonVersion}")
+
+        implementation "org.slf4j:slf4j-api:1.7.36"
+        implementation "org.slf4j:slf4j-simple:1.7.36"
+
+        testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+dependencies {
+    implementation project(':ddns-client')
+    implementation project(':ddns-web-api')
+
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+
+    implementation "info.picocli:picocli:${picocliVersion}"
+    annotationProcessor "info.picocli:picocli-codegen:${picocliVersion}"
+    implementation "org.apache.httpcomponents.core5:httpcore5:${httpcomponentsCoreVersion}"
+
+    implementation("commons-codec:commons-codec:1.18.0")
+}
